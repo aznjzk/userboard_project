@@ -25,6 +25,7 @@
 	}
 
 	
+	
 	/* 현재 파라미터값 디버깅 */
 	System.out.println(CYAN + request.getParameter("boardNo") + " <-- boardOne param boardNo" + RESET); 
 	
