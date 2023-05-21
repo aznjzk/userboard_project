@@ -36,8 +36,7 @@
 	// 요청값이 null이거나 공백이면 → home페이지 재요청 및 코드진행 종료
 	if(request.getParameter("boardNo") == null 
 		|| request.getParameter("boardNo").equals("")){
-		msg = URLEncoder.encode("잘못된 접근입니다.", "utf-8");
-		response.sendRedirect(request.getContextPath()+"/home.jsp?msg=" + msg);
+		response.sendRedirect(request.getContextPath()+"/home.jsp");
 		return;
 	}
 	
@@ -278,6 +277,7 @@
 				<td><%=c.getCommentContent()%></td>
 			<tr>
 			</tr>
+			<tr>
 				<td style="color:gray"> 
 					작성 : <%=c.getCreatedate()%>
 					/ 수정 : <%=c.getUpdatedate()%>

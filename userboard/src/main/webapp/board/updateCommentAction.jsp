@@ -33,11 +33,11 @@
 	System.out.println(loginMemberId + " <-- updateCommentAction 변수 loginMemberId");
 	
 	/* 요청값 유효성 검사 */
-	// 요청값이 null이거나 공백이면 → 비밀번호 변경 페이지 재요청 및 오류메세지 출력
+	// 요청값이 null이거나 공백이면 → 댓글 페이지 재요청 및 오류메세지 출력
 	if (request.getParameter("updateCommentContent") == null
 		|| request.getParameter("updateCommentContent").equals("")){
 		msg = URLEncoder.encode("댓글을 입력해주세요", "utf-8");
-		response.sendRedirect(request.getContextPath() + "/board/CommentForm.jsp?msg=" + msg);
+		response.sendRedirect(request.getContextPath() + "/board/boardOne.jsp?boardNo="+request.getParameter("boardNo")+"&msg=" + msg);
 		return;
 	}
 	// 유효성 검사 통과하면 변수에 저장
@@ -83,13 +83,12 @@
 	if(updateCommentRow == 1){
 		System.out.println(updateCommentRow + " <-- updateCommentAction updateCommentRow : 댓글수정성공");
 		msg = URLEncoder.encode("댓글 수정이 완료되었습니다", "utf-8");
-		response.sendRedirect(request.getContextPath() + "/home.jsp?msg=" + msg);
+		response.sendRedirect(request.getContextPath() + "/board/boardOne.jsp?boardNo="+request.getParameter("boardNo")+"&msg=" + msg);
 		return;
 	
-		// 댓글 수정 실패 시 
-	} else { // 위의 유효성검사에서도 안 걸렸는데 실패했다면, 댓글 작성자가 아니기 때문일 것??????????
+	// 댓글 수정 실패 시 
+	} else { 
 		System.out.println(updateCommentRow + " <-- updateAction updatePwRow : 댓글수정실패");
-		msg = URLEncoder.encode("댓글 작성자만 수정 가능합니다", "utf-8");
 		response.sendRedirect(request.getContextPath() + "/home.jsp?msg=" + msg);
 		return;
 	}

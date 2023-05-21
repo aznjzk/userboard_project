@@ -41,11 +41,11 @@
 	// 요청값이 null이거나 공백이면 → home페이지 재요청 및 코드진행 종료
 	if(request.getParameter("boardNo") == null 
 		|| request.getParameter("boardNo").equals("")){
-		response.sendRedirect(request.getContextPath()+"/home.jsp?msg=" + msg);
+		response.sendRedirect(request.getContextPath()+"/home.jsp");
 		return;
 	} else if(request.getParameter("commentNo")==null
 		|| request.getParameter("commentNo").equals("")){
-		response.sendRedirect(request.getContextPath()+"/board/boardOne.jsp?boardNo="+request.getParameter("boardNo"));
+		response.sendRedirect(request.getContextPath()+"/home.jsp");
 		return;
 	}
 
@@ -209,10 +209,6 @@
 	
 	<br>
 	
-	<!------------------------------------------------------------- [끝] 게시글 --->
-	
-	<!--- [시작] 댓글 ------------------------------------------------------------->
-	
 	<!--  게시글 작성자와 로그인 아이디가 같은 경우만 게시글 수정삭제 가능 -->
 	<%
 		if(loginMemberId.equals(board.getMemberId())){
@@ -227,6 +223,8 @@
 	
 	<br>
 	
+	<!------------------------------------------------------------- [끝] 게시글 --->
+	
 	<!-- 오류 메시지 -->
 	<div class="text-danger">
 		<%
@@ -240,48 +238,53 @@
 	
 	<br>
 
+	<!--- [시작] 댓글 ------------------------------------------------------------->
 	<!--  3-3) comment list 결과셋 : 로그인 여부에 따라 분기 -->
 	<%
-		for(Comment c : commentList){
-			if(loginMemberId.equals(c.getMemberId())){
+		for(Comment c : commentList) {
 	%>
-	<div class="container">
-	<form action="<%=request.getContextPath()%>/board/updateCommentAction.jsp" method="post">
-		<input type ="hidden" name="boardNo" value="<%=boardNo%>">
-		<input type ="hidden" name="commentNo" value="<%=commentNo%>">
 		<table class="table">	
+			<thead class="table-light">
 			<tr>
-				<th>commentContent</th>
-				<th>memberId</th>
-				<th>createdate</th>
-				<th>updatedate</th>
-				<th colspan="2">&nbsp;</th>
+				<th><%=c.getMemberId()%></th>
+			</tr>
+			</thead>
+			<tbody>
+			<tr>
+				<td><%=c.getCommentContent()%></td>
+			<tr>
 			</tr>
 			<tr>
-			<th>
-				<textarea rows="2" cols="80" name="commentContent"><%=c.getCommentContent()%></textarea>
-			</th>   
-			<%      
-				} else{
-				msg = URLEncoder.encode("댓글 작성자만 수정 가능합니다", "utf-8");
-				response.sendRedirect(request.getContextPath() + "/board/boardOne.jsp?boardNo=" + boardNo + "&msg=" + msg);
-				return;
-			}
-			%>
+				<td style="color:gray"> 
+					작성 : <%=c.getCreatedate()%>
+					/ 수정 : <%=c.getUpdatedate()%>
+				</td>
+			</tr>
+		
 			
-				<th>
-					<button type="submit">수정</button>
-				</th>
-				<th>
-					<button type="button" onclick="location.href=<%=request.getContextPath()%>/board/boardOne.jsp?boardNo=<%=boardNo%>">취소</button>
-				</th>
-			<%
-				}
-			%>
-				</tr>
-		</table>
-	</form>
-	</div>
+	<%	// 로그인한 사용자이면서 && 로그인 아이디와 댓글 작성자가 같을 때만 → 수정,삭제 허용 
+			if(loginMemberId != null
+			&& loginMemberId.equals(c.getMemberId())){ 
+	%>		
+			<tr>
+				<td>
+					<form action="<%=request.getContextPath()%>/board/updateCommentAction.jsp" method="post">
+						<input type="hidden" name="boardNo" value="<%=board.getBoardNo()%>">
+						<textarea rows="2" cols="80" name="updateCommentContent"><%=c.getCommentContent()%></textarea>
+						<button type="submit" class="btn btn-light" style="float:right">수정</button>
+					</form>	
+	<%
+			} 
+		
+		}
+	%>		
+			</td>
+			</tr>
+		</tbody>
+	</table>
+
+	
+	
 	
 	<!-- comment 페이징 -->
 	<div>
