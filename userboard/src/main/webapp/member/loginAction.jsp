@@ -63,7 +63,8 @@
 		// 세션에 로그인 정보(memberId) 저장
 		session.setAttribute("loginMemberId", rs.getString("memberId"));
 		System.out.println("로그인 성공 세션정보 : " + session.getAttribute("loginMemberId"));
-		msg = "";
+		response.sendRedirect(request.getContextPath()+"/home.jsp");
+		return;
 	} else { // 로그인 실패시
 		System.out.println("로그인 실패");
 		msg = URLEncoder.encode("아이디 또는 패스워드를 잘못 입력하였습니다", "utf-8");
