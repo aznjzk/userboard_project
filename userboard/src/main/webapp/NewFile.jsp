@@ -3,7 +3,6 @@
 <%@ page import = "java.net.*" %>
 <%@ page import = "java.util.*" %>
 <%@ page import = "vo.*" %>
-
 <%
 	// 인코딩 처리
 	response.setCharacterEncoding("UTF-8");
@@ -70,6 +69,7 @@
 			board_no boardNo,
 			local_name localName,
 			board_title boardTitle,
+			LEFT(board_content, 30) boardContent,
 			createdate
 		FROM board
 		WHERE local_name = ?
@@ -78,12 +78,12 @@
 	*/
 	
 	// LIMIT절에 넣을 변수 값 할당
-	rowPerPage = 10;
+	rowPerPage = 5;
 	startRow = (currentPage-1) * rowPerPage;
 		
 	// localName의 요청값에 따른 쿼리문 분기
 	if(localName.equals("전체")) {
-		boardSql = "SELECT board_no boardNo, local_name localName, board_title boardTitle, createdate FROM board ORDER BY createdate DESC LIMIT ?, ?";
+		boardSql = "SELECT board_no boardNo, local_name localName, board_title boardTitle, LEFT(board_content, 30) boardContent, createdate FROM board ORDER BY createdate DESC LIMIT ?, ?";
 		boardStmt = conn.prepareStatement(boardSql);
 		// ? 2개
 		boardStmt.setInt(1, startRow);
@@ -91,7 +91,7 @@
 		// 쿼리 디버깅
 		System.out.println(BG_BLUE + boardStmt + " <-- home boardStmt" + RESET);
 	} else {
-		boardSql = "SELECT board_no boardNo, local_name localName, board_title boardTitle, createdate FROM board WHERE local_name = ? ORDER BY createdate DESC LIMIT ?, ?";
+		boardSql = "SELECT board_no boardNo, local_name localName, board_title boardTitle, LEFT(board_content, 30) boardContent, createdate FROM board WHERE local_name = ? ORDER BY createdate DESC LIMIT ?, ?";
 		boardStmt = conn.prepareStatement(boardSql);
 		// ? 3개
 		boardStmt.setString(1, localName);
@@ -109,6 +109,7 @@
 		b.setBoardNo(boardRs.getInt("boardNo"));
 		b.setLocalName(boardRs.getString("localName"));
 		b.setBoardTitle(boardRs.getString("boardTitle"));
+		b.setBoardContent(boardRs.getString("boardContent"));
 		b.setCreatedate(boardRs.getString("createdate"));
 		boardList.add(b);
 	}
@@ -214,63 +215,23 @@
             <div class="row">
                 <!-- Blog entries-->
                 <div class="col-lg-8">
+                <%
+					for(Board b : boardList) {
+				%>
                     <!-- Featured blog post-->
                     <div class="card mb-4">
-                        <a href="#!"><img class="card-img-top" src="https://dummyimage.com/850x350/dee2e6/6c757d.jpg" alt="..." /></a>
+                        <a href="#!"></a>
                         <div class="card-body">
-                            <div class="small text-muted">January 1, 2023</div>
-                            <h2 class="card-title">Featured Post Title</h2>
-                            <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Reiciendis aliquid atque, nulla? Quos cum ex quis soluta, a laboriosam. Dicta expedita corporis animi vero voluptate voluptatibus possimus, veniam magni quis!</p>
-                            <a class="btn btn-primary" href="#!">Read more →</a>
+                            <div class="small text-muted"><%=b.getLocalName()%> | <%=b.getCreatedate()%></div>
+                            <br>
+                            <h2 class="card-title"><%=b.getBoardTitle()%></h2>
+                            <p class="card-text"><%=b.getBoardContent()%> . . . </p>
                         </div>
                     </div>
-                    <!-- Nested row for non-featured blog posts-->
-                    <div class="row">
-                        <div class="col-lg-6">
-                            <!-- Blog post-->
-                            <div class="card mb-4">
-                                <a href="#!"><img class="card-img-top" src="https://dummyimage.com/700x350/dee2e6/6c757d.jpg" alt="..." /></a>
-                                <div class="card-body">
-                                    <div class="small text-muted">January 1, 2023</div>
-                                    <h2 class="card-title h4">Post Title</h2>
-                                    <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Reiciendis aliquid atque, nulla.</p>
-                                    <a class="btn btn-primary" href="#!">Read more →</a>
-                                </div>
-                            </div>
-                            <!-- Blog post-->
-                            <div class="card mb-4">
-                                <a href="#!"><img class="card-img-top" src="https://dummyimage.com/700x350/dee2e6/6c757d.jpg" alt="..." /></a>
-                                <div class="card-body">
-                                    <div class="small text-muted">January 1, 2023</div>
-                                    <h2 class="card-title h4">Post Title</h2>
-                                    <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Reiciendis aliquid atque, nulla.</p>
-                                    <a class="btn btn-primary" href="#!">Read more →</a>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-6">
-                            <!-- Blog post-->
-                            <div class="card mb-4">
-                                <a href="#!"><img class="card-img-top" src="https://dummyimage.com/700x350/dee2e6/6c757d.jpg" alt="..." /></a>
-                                <div class="card-body">
-                                    <div class="small text-muted">January 1, 2023</div>
-                                    <h2 class="card-title h4">Post Title</h2>
-                                    <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Reiciendis aliquid atque, nulla.</p>
-                                    <a class="btn btn-primary" href="#!">Read more →</a>
-                                </div>
-                            </div>
-                            <!-- Blog post-->
-                            <div class="card mb-4">
-                                <a href="#!"><img class="card-img-top" src="https://dummyimage.com/700x350/dee2e6/6c757d.jpg" alt="..." /></a>
-                                <div class="card-body">
-                                    <div class="small text-muted">January 1, 2023</div>
-                                    <h2 class="card-title h4">Post Title</h2>
-                                    <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Reiciendis aliquid atque, nulla? Quos cum ex quis soluta, a laboriosam.</p>
-                                    <a class="btn btn-primary" href="#!">Read more →</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                <%		
+					}
+				%> 
+                    
                     <!-- Pagination-->
                     <nav aria-label="Pagination">
                         <hr class="my-0" />
@@ -285,18 +246,55 @@
                         </ul>
                     </nav>
                 </div>
-                <!-- Side widgets-->
-                <div class="col-lg-4">
-                    <!-- Search widget-->
-                    <div class="card mb-4">
-                        <div class="card-header">Search</div>
-                        <div class="card-body">
-                            <div class="input-group">
-                                <input class="form-control" type="text" placeholder="Enter search term..." aria-label="Enter search term..." aria-describedby="button-search" />
-                                <button class="btn btn-primary" id="button-search" type="button">Go!</button>
-                            </div>
-                        </div>
-                    </div>
+        	</div>        
+        </div>
+		<!-- Side widgets-->
+		<div class="col-lg-4">
+			<!-- Side widget : 로그인 폼 -->
+			<%
+				if(session.getAttribute("loginMemberId") == null) {  // 로그인을 하지 않은 경우에만 로그인폼 출력
+			%>
+			<div class="card mb-4">
+			<div class="card-header">로그인</div>
+				<div class="container text-center">
+				<form action="<%=request.getContextPath()%>/member/loginAction.jsp" method="post">
+						<table>
+							<tr>
+								<td>&#128100;</td>
+								<td><input class="form-control" type="text" name="memberId"></td>
+							</tr>
+							<tr>
+								<td>&#128274;</td>
+								<td><input class="form-control" type="password" name="memberPw"></td>
+							</tr>
+						</table>
+						<div>
+							<button class="btn btn-primary center" type="submit">로그인</button>
+						</div>
+					</form>
+				<%   
+					} else { // 로그인에 성공한 경우
+					String loginMemberId = (String)(session.getAttribute("loginMemberId"));
+				%>
+					<div class="card mb-4">
+					<div class="container text-center">
+					<p><%=loginMemberId%>님 환영합니다</p>
+				<%		
+					}
+				%>
+				<!-- 오류 메시지 -->
+				<div class="text-danger">
+				<%
+					if(request.getParameter("msg") != null){
+				%>
+					<%=request.getParameter("msg")%>
+				<%
+					}
+				%>
+				</div> 
+				</div>
+			</div>
+                    
 			<!-- Categories widget : 서브메뉴(세로) subMenuList1모델 출력 -->
 			<div class="card mb-4">
 				<div class="card-header">Categories 지역 선택</div>
@@ -320,48 +318,15 @@
 					</div>
 				</div>
 			</div>
-			<!-- Side widget : 로그인 폼 -->
+			<!-- Search widget-->
 			<div class="card mb-4">
-			<div class="card-header">로그인</div>
-				<div class="container text-center">
-				<%
-					if(session.getAttribute("loginMemberId") == null) {  // 로그인을 하지 않은 경우에만 로그인폼 출력
-				%>
-					<form action="<%=request.getContextPath()%>/member/loginAction.jsp" method="post">
-						<table>
-							<tr>
-								<td>&#128100;</td>
-								<td><input class="form-control" type="text" name="memberId"></td>
-							</tr>
-							<tr>
-								<td>&#128274;</td>
-								<td><input class="form-control" type="password" name="memberPw"></td>
-							</tr>
-							<tr>
-								<td><button class="btn btn-primary" type="submit">로그인</button></td>
-								<td></td>
-							</tr>
-						</table>
-					</form>
-				<%   
-					} else { // 로그인에 성공한 경우
-					String loginMemberId = (String)(session.getAttribute("loginMemberId"));
-				%>
-					<p><%=loginMemberId%>님 환영합니다</p>
-				<%		
-					}
-				%>
-<!-- 오류 메시지 -->
-<div class="text-danger">
-<%
-if(request.getParameter("msg") != null){
-%>
-<%=request.getParameter("msg")%>
-<%
-}
-%>
-</div> 
-				</div>
+				<div class="card-header">Search</div>
+					<div class="card-body">
+						<div class="input-group">
+							<input class="form-control" type="text" placeholder="Enter search term..." aria-label="Enter search term..." aria-describedby="button-search" />
+							<button class="btn btn-primary" id="button-search" type="button">Go!</button>
+						</div>
+					</div>
 				</div>
 			</div>
 		</div>
