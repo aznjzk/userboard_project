@@ -59,10 +59,11 @@
 	</div>
 	
 	<br>
-	<h1>카테고리 삭제</h1>	
-	<!-- 지역 카테고리 추가 -->
-	<form action="<%=request.getContextPath()%>/local/deleteLocalAction.jsp" method="post">
-		<div>	
+	
+	<div class="container">
+		<!-- 지역 카테고리 삭제 -->
+		<h1>카테고리 삭제</h1>
+		<form action="<%=request.getContextPath()%>/local/deleteLocalAction.jsp" method="post">
 			<table class="table">
 				<tr>
 					<th>삭제할 지역 이름을 선택해 주세요</th>
@@ -81,23 +82,32 @@
 					</td>
 				</tr>
 			</table>
-		</div>
 		
-		<!-- 오류 메시지 -->
-		<div class="text-danger">
-			<%
-				if(request.getParameter("msg") != null){
-			%>
-				<%=request.getParameter("msg")%>
-			<%
-				}
-			%>
-		</div>
-		
-		<div>
-			<button type="submit" class="btn btn-outline-primary">지역삭제</button>
-		</div>
-	</form>
+			<div>
+				<button type="submit" class="btn btn-outline-primary">지역삭제</button>
+				
+				<!-- 오류 메시지 -->
+				<span class="text-danger">
+					<%
+						if(request.getParameter("msg") != null){
+					%>
+						<%=request.getParameter("msg")%>
+					<%
+						}
+					%>
+				</span>
+			</div>
+		</form>
+	</div>
 	
+	<!-- Bootstrap core JS-->
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+	<!-- Core theme JS-->
+	<script src="js/scripts.js"></script>
+	
+	<!-- include 페이지 : Copyright &copy; 구디아카데미 -->
+	<div>
+		<jsp:include page="/inc/copyright.jsp"></jsp:include>
+	</div>
 </body>
 </html>

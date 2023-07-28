@@ -32,38 +32,50 @@
 	
 	<br>
 	
-	<!-- 지역 카테고리 상세보기 및 수정 삭제 버튼 -->
-	<h2>지역 카테고리 설정</h2>
-	
-	<!-- 오류 메시지 -->
-	<div class="text-primary">
-		<%
-			if(request.getParameter("msg") != null){
-		%>
-			<%=request.getParameter("msg")%>
-		<%
-			}
-		%>
+	<div class="container">
+		<!-- 지역 카테고리 상세보기 및 수정 삭제 버튼 -->
+		<h2>지역 카테고리 관리 페이지</h2>
+		
+		<!-- 오류 메시지 -->
+		<div class="text-primary">
+			<%
+				if(request.getParameter("msg") != null){
+			%>
+				<%=request.getParameter("msg")%>
+			<%
+				}
+			%>
+		</div>
+		
+		<div>
+		<table class="table">
+			<tr>
+				<td>
+					<a class="btn btn-outline-primary" href="<%=request.getContextPath()%>/local/insertLocalForm.jsp">지역 추가</a>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<a class="btn btn-outline-primary" href="<%=request.getContextPath()%>/local/updateLocalForm.jsp">지역 수정</a>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<a class="btn btn-outline-primary" href="<%=request.getContextPath()%>/local/deleteLocalForm.jsp">지역 삭제</a>
+				</td>
+			</tr>
+		</table>
+		</div>
 	</div>
 	
+	<!-- Bootstrap core JS-->
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+	<!-- Core theme JS-->
+	<script src="js/scripts.js"></script>
+	
+	<!-- include 페이지 : Copyright &copy; 구디아카데미 -->
 	<div>
-	<table class="table table-bordered">
-		<tr>
-			<td>
-				<a class="btn btn-outline-primary" href="<%=request.getContextPath()%>/local/insertLocalForm.jsp">지역 추가</a>
-			</td>
-		</tr>
-		<tr>
-			<td>
-				<a class="btn btn-outline-primary" href="<%=request.getContextPath()%>/local/updateLocalForm.jsp">지역 수정</a>
-			</td>
-		</tr>
-		<tr>
-			<td>
-				<a class="btn btn-outline-primary" href="<%=request.getContextPath()%>/local/deleteLocalForm.jsp">지역 삭제</a>
-			</td>
-		</tr>
-	</table>
+		<jsp:include page="/inc/copyright.jsp"></jsp:include>
 	</div>
 </body>
 </html>

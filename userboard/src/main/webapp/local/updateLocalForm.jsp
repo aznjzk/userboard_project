@@ -59,54 +59,66 @@
 	</div>
 	
 	<br>
-	<!-- 지역 카테고리 수정 -->
-	<h1>카테고리 수정</h1>
-	<form action="<%=request.getContextPath()%>/local/updateLocalAction.jsp" method="post">
-		<div>	
-			<table class="table">
-				<tr>
-					<th>수정할 지역 이름을 선택해 주세요</th>
-				</tr>
-				<tr>
-					<td>기존 카테고리명</td>
-				</tr>
-				<tr>
-					<td>
-						<select class="form-select" name="currentLocalName">
-							<%
-								for(Local local : localNameList) {
-							%>
-									<option value="<%=local.getLocalName()%>"><%=local.getLocalName()%></option>
-							<%
-								}
-							%>
-						</select>
-					</td>
-				</tr>
-				<tr>
-					<td>카테고리명 수정</td>
-				</tr>
-				<tr>
-					<td><input type ="text" class="form-control" name="updateLocalName"></td>
-				</tr>
-			</table>
-		</div>	
-		
-		<!-- 오류 메시지 -->
-		<div class="text-danger">
-			<%
-				if(request.getParameter("msg") != null){
-			%>
-				<%=request.getParameter("msg")%>
-			<%
-				}
-			%>
-		</div>
-		
-		<div>
-			<button type="submit" class="btn btn-outline-primary">지역수정</button>
-		</div>
-	</form>
 	
+	<div class="container">
+		<!-- 지역 카테고리 수정 -->
+		<h1>카테고리 수정</h1>
+		<form action="<%=request.getContextPath()%>/local/updateLocalAction.jsp" method="post">
+			<div>	
+				<table class="table">
+					<tr>
+						<th>수정할 지역 이름을 선택해 주세요</th>
+					</tr>
+					<tr>
+						<td>기존 카테고리명</td>
+					</tr>
+					<tr>
+						<td>
+							<select class="form-select" name="currentLocalName">
+								<%
+									for(Local local : localNameList) {
+								%>
+										<option value="<%=local.getLocalName()%>"><%=local.getLocalName()%></option>
+								<%
+									}
+								%>
+							</select>
+						</td>
+					</tr>
+					<tr>
+						<td>카테고리명 수정</td>
+					</tr>
+					<tr>
+						<td><input type ="text" class="form-control" name="updateLocalName"></td>
+					</tr>
+				</table>
+			</div>	
+			
+			<!-- 오류 메시지 -->
+			<div class="text-danger">
+				<%
+					if(request.getParameter("msg") != null){
+				%>
+					<%=request.getParameter("msg")%>
+				<%
+					}
+				%>
+			</div>
+			
+			<div>
+				<button type="submit" class="btn btn-outline-primary">지역수정</button>
+			</div>
+		</form>
+	</div>
+	
+	<!-- Bootstrap core JS-->
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+	<!-- Core theme JS-->
+	<script src="js/scripts.js"></script>
+	
+	<!-- include 페이지 : Copyright &copy; 구디아카데미 -->
+	<div>
+		<jsp:include page="/inc/copyright.jsp"></jsp:include>
+	</div>
 </body>
 </html>

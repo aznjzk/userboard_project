@@ -3,7 +3,6 @@
 <%@ page import = "java.net.*" %>
 <%@ page import = "java.util.*" %>
 <%@ page import = "vo.*" %>
-
 <%
 	// 인코딩 처리
 	response.setCharacterEncoding("UTF-8");
@@ -35,7 +34,7 @@
 	
 	/* 페이징을 위한 변수 설정 */
 	int currentPage = 1;	// 현재 페이지 (디폴트 값 1)
-	int rowPerPage = 10;	// 페이지당 출력할 행의 개수 (디폴트 값 10)
+	int rowPerPage = 5;		// 페이지당 출력할 행의 개수 (디폴트 값 5)
 	int startRow = 0;		// 시작 행번호
 	int totalRow = 0; 		// 마지막 행번호
 	int lastPage = 0;		// 마지막 페이지
@@ -70,6 +69,7 @@
 			board_no boardNo,
 			local_name localName,
 			board_title boardTitle,
+			LEFT(board_content, 30) boardContent,
 			createdate
 		FROM board
 		WHERE local_name = ?
@@ -78,12 +78,12 @@
 	*/
 	
 	// LIMIT절에 넣을 변수 값 할당
-	rowPerPage = 10;
+	rowPerPage = 5;
 	startRow = (currentPage-1) * rowPerPage;
 		
 	// localName의 요청값에 따른 쿼리문 분기
 	if(localName.equals("전체")) {
-		boardSql = "SELECT board_no boardNo, local_name localName, board_title boardTitle, createdate FROM board ORDER BY createdate DESC LIMIT ?, ?";
+		boardSql = "SELECT board_no boardNo, local_name localName, board_title boardTitle, LEFT(board_content, 30) boardContent, createdate FROM board ORDER BY createdate DESC LIMIT ?, ?";
 		boardStmt = conn.prepareStatement(boardSql);
 		// ? 2개
 		boardStmt.setInt(1, startRow);
@@ -91,7 +91,7 @@
 		// 쿼리 디버깅
 		System.out.println(BG_BLUE + boardStmt + " <-- home boardStmt" + RESET);
 	} else {
-		boardSql = "SELECT board_no boardNo, local_name localName, board_title boardTitle, createdate FROM board WHERE local_name = ? ORDER BY createdate DESC LIMIT ?, ?";
+		boardSql = "SELECT board_no boardNo, local_name localName, board_title boardTitle, LEFT(board_content, 30) boardContent, createdate FROM board WHERE local_name = ? ORDER BY createdate DESC LIMIT ?, ?";
 		boardStmt = conn.prepareStatement(boardSql);
 		// ? 3개
 		boardStmt.setString(1, localName);
@@ -109,6 +109,7 @@
 		b.setBoardNo(boardRs.getInt("boardNo"));
 		b.setLocalName(boardRs.getString("localName"));
 		b.setBoardTitle(boardRs.getString("boardTitle"));
+		b.setBoardContent(boardRs.getString("boardContent"));
 		b.setCreatedate(boardRs.getString("createdate"));
 		boardList.add(b);
 	}
@@ -142,7 +143,6 @@
 	}
 	// 디버깅
 	System.out.println(BG_PURPLE + subMenuList.size() + " <-- home subMenuList.size()" + RESET);
-
 
 	/* 페이지네이션 */
 	String pageSql = "";
@@ -180,147 +180,243 @@
 		lastPage = lastPage + 1;
 	}
 	System.out.println(lastPage + " <-- home lastPage 마지막페이지");
+	
+	/*
+	pagePerPage = 5 일때
+		
+		currentPage	  minPage		  maxPage
+			 1			 1				 5
+			 7			 6				10
+			19			16				20	
+	*/
+		
+	// 하단 페이지목록 : 한 번에 보여줄 페이지의 개수
+	int pagePerPage = 5;
+	// 페이지 목록 중 가장 작은 숫자의 페이지
+	int minPage = ((currentPage - 1) / pagePerPage ) * pagePerPage + 1;
+	// 페이지 목록 중 가장 큰 숫자의 페이지
+	int maxPage = minPage + (pagePerPage - 1);
+	// maxPage 가 last Page보다 커버리면 안되니까 lastPage를 넣어준다
+	if (maxPage > lastPage){
+		maxPage = lastPage;
+	}
 %>
-
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
-<title>home.jsp</title>
+<title>homeCSS</title>
 	<!-- 부트스트랩5 사용 -->
 	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+	<!-- 구글 폰트 적용 -->
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Nanum+Pen+Script&display=swap" rel="stylesheet">
+	<style>
+		div{
+			font-family: 'Nanum Pen Script', cursive;
+		}
+	</style>
 </head>
 <body>
-	
 	<!-- 메인메뉴(가로) -->
 	<div>
 		<jsp:include page="/inc/mainmenu.jsp"></jsp:include>
 	</div>
 	
-	<br>
+	<!-- Page header with logo and tagline-->
+	<header class="py-5 bg-image border-bottom mb-4">
+	   	<div class="container">
+	       	<div class="text-center my-5">
+	            <h1 class="fw-bolder">Welcome to Blog Home!</h1>
+	            <p class="lead mb-0">A Bootstrap 5 starter layout for your next blog homepage</p>
+	            <p class="lead mb-0">A Bootstrap 5 starter layout for your next blog homepage</p>
+	            <p class="lead mb-0">A Bootstrap 5 starter layout for your next blog homepage</p>
+	            <p class="lead mb-0">A Bootstrap 5 starter layout for your next blog homepage</p>
+	            <p class="lead mb-0">A Bootstrap 5 starter layout for your next blog homepage</p>
+	            <p class="lead mb-0">A Bootstrap 5 starter layout for your next blog homepage</p>
+	            <p class="lead mb-0">A Bootstrap 5 starter layout for your next blog homepage</p>
+	            <p class="lead mb-0">A Bootstrap 5 starter layout for your next blog homepage</p>
+	        </div>
+	    </div>
+	</header>
 	
-	<!-- 서브메뉴(세로) subMenuList1모델 출력 -->
-	<div>
-	<h2>지역 선택</h2>	
-		<ul>
-		<%
-			for(HashMap<String, Object> m : subMenuList) {
-		%>
-			<li>
-				<a href="<%=request.getContextPath()%>/home.jsp?localName=<%=(String)m.get("localName")%>">
-					<%=(String)m.get("localName")%>(<%=(Integer)m.get("cnt")%>)
-				</a>
-			</li>
-		<%		
-			}
-		%>
-		</ul>
+	<!-- Page content-->
+	<div class="container">
+		<div class="row">
+	        <!-- Side widgets-->
+			<div class="col-lg-3">
+			<!-- login widget : 로그인 폼 -->
+			<%
+				if(session.getAttribute("loginMemberId") == null) {  // 로그인을 하지 않은 경우에만 로그인폼 출력
+			%>
+				<div class="card mb-4">
+				<div class="card-header">login</div>
+					<div class="container text-center">
+						<form action="<%=request.getContextPath()%>/member/loginAction.jsp" method="post">
+							<table>
+								<tr>
+									<td>&#128100;</td>
+									<td><input class="form-control" type="text" name="memberId"></td>
+								</tr>
+								<tr>
+									<td>&#128274;</td>
+									<td><input class="form-control" type="password" name="memberPw"></td>
+								</tr>
+							</table>
+							<div>
+								<button class="btn btn-primary center" type="submit">로그인</button>
+							</div>
+						</form>
+			<%   
+				} else { // 로그인에 성공한 경우
+				String loginMemberId = (String)(session.getAttribute("loginMemberId"));
+			%>
+				<div class="card mb-4">
+					<div class="container text-center">
+						<br>
+						<p><%=loginMemberId%>님 환영합니다&#128075;&#127995;</p>
+						<a class="btn btn-outline-primary" href="<%=request.getContextPath()%>/member/userInformation.jsp">회원정보</a>
+						<a class="btn btn-outline-primary" href="<%=request.getContextPath()%>/member/logoutAction.jsp">로그아웃</a>
+						<br>
+						&nbsp;
+				<%		
+					}
+				%>
+						<!-- 오류 메시지 -->
+						<div class="text-danger">
+					<%
+						if(request.getParameter("msg") != null){
+					%>
+							<%=request.getParameter("msg")%>
+					<%
+						}
+					%>
+						</div> 
+					</div>
+				</div>
+                    
+				<!-- Categories widget : 서브메뉴(세로) subMenuList1모델 출력 -->
+				<div class="card mb-4">
+					<div class="card-header">
+					<%
+						if(localName == null || localName.equals("전체")) {
+					%>
+							Categories
+					<%
+						} else {
+					%>
+							Categories : <%=localName%>
+					<%
+						}
+					%>
+					</div>
+					<div class="card-body">
+						<div class="row">
+							<div class="col-sm-12">
+								<ul class="list-unstyled mb-0">
+								<%
+									for(HashMap<String, Object> m : subMenuList) {
+								%>
+								<li>
+									<a href="<%=request.getContextPath()%>/home.jsp?localName=<%=(String)m.get("localName")%>" style="text-decoration: none">
+										<%=(String)m.get("localName")%>(<%=(Integer)m.get("cnt")%>)
+									</a>
+								</li>
+								<%		
+									}
+								%>
+								</ul>
+							</div>
+						</div>
+					</div>
+				</div>
+			
+				<!-- Search widget-->
+				<div class="card mb-4">
+					<div class="card-header">Search</div>
+					<div class="card-body">
+						<div class="input-group">
+							<input class="form-control" type="text" placeholder="Enter search term..." aria-label="Enter search term..." aria-describedby="button-search" />
+							<button class="btn btn-primary" id="button-search" type="button">Go!</button>
+						</div>
+					</div>
+				</div>
+			</div>
+                
+			<!-- Blog entries-->
+			<div class="col-lg-9">
+			<%
+				for(Board b : boardList) {
+			%>
+				<!-- Featured blog post-->
+				<div class="card mb-4">
+				    
+				    <div class="card-body">
+				        <div class="small text-muted"><%=b.getLocalName()%> | <%=b.getCreatedate()%></div>
+						<br>
+						<h2 class="card-title"><%=b.getBoardTitle()%></h2>
+						<p class="card-text"><%=b.getBoardContent()%> . . . <a href="<%=request.getContextPath()%>//board/boardOne.jsp?boardNo=<%=b.getBoardNo()%>" style="text-decoration: none">더보기</a></p>
+				    </div>
+				</div>
+			<%		
+				}
+			%> 
+			</div>
+		    <!-- Pagination -->		
+			<div>
+				<nav aria-label="Pagination">
+				    <hr class="my-0" />
+				    <ul class="pagination justify-content-center my-4">
+				    <%
+						if(minPage != 1) {
+					%>
+						<li class="page-item active" aria-current="page"><a class="page-link" href="./home.jsp?localName=<%=localName%>&currentPage=<%=minPage-5%>">Newer</a></li>
+					<%
+						} else { // 1페이지에서는 이전버튼 비활성화
+					%>
+				        <li class="page-item disabled"><a class="page-link" href="./home.jsp?localName=<%=localName%>&currentPage=<%=minPage-5%>">Newer</a></li>
+				    <%
+						}
+				    
+						for(int i = minPage; i <= maxPage; i++) {
+							if(i != currentPage) {
+					%>    
+				        	<li class="page-item"><a class="page-link" href="./home.jsp?localName=<%=localName%>&currentPage=<%=i%>"><%=i%></a></li>
+			        <%
+							} else { // 현재페이지에서는 버튼 비활성화
+					%>
+							<li class="page-item disabled">
+								<span class="page-link" tabindex="-1" aria-disabled="true"><%=i%></span>
+							</li>
+					<%
+							}
+						}
+						
+						if(maxPage != lastPage) {
+					%>
+						<li class="page-item active"><a class="page-link" href="./home.jsp?localName=<%=localName%>&currentPage=<%=maxPage+1%>">Older</a></li>
+					<%
+						} else { // 마지막 페이지에서는 다음버튼 비활성화
+					%>
+						<li class="page-item disabled" aria-current="page"><a class="page-link" href="./home.jsp?localName=<%=localName%>&currentPage=<%=maxPage+1%>">Older</a></li>
+				    <%
+						}
+				    %>
+				    
+				    </ul>
+				</nav>
+			</div>
+		</div>
 	</div>
-	
-	<br>
-	<!-------------------- home 내용 : 로그인 폼 / 카테고리별 게시글 10개씩 -------------------->
-	
-	<!-- 로그인 폼 -->
-	<div>
-		<%
-			if(session.getAttribute("loginMemberId") == null) {  // 로그인을 하지 않은 경우에만 로그인폼 출력
-		%>
-			<form action="<%=request.getContextPath()%>/member/loginAction.jsp" method="post">
-				<h2>로그인</h2>
-				<table class="table table-bordered">
-					<tr>
-						<td>아이디</td>
-						<td><input type="text" name="memberId"></td>
-					</tr>
-					<tr>
-						<td>비밀번호</td>
-						<td><input type="password" name="memberPw"></td>
-					</tr>
-				</table>
-			<button type="submit">로그인</button>
-			</form>
-		<%   
-			} else { // 로그인에 성공한 경우
-			String loginMemberId = (String)(session.getAttribute("loginMemberId"));
-		%>
-			<p><%=loginMemberId%>님 환영합니다</p>
-		<%		
-			}
-		%>
+		</div>
 	</div>
-		
-	<!-- 오류 메시지 -->
-	<div class="text-danger">
-		<%
-			if(request.getParameter("msg") != null){
-		%>
-			<%=request.getParameter("msg")%>
-		<%
-			}
-		%>
-	</div> 
-	
-	<br>
-	
-	<!---[시작] boardList--------------------------------------------------->
-	<!-- 카테고리별 게시글 10개씩  -->
-	<h2><%=localName%> 게시글</h2>
-	<div>
-	<table class="table table-bordered table-hover">
-		<thead class="table-primary">
-			<tr>
-				<th>지역</th>
-				<th>제목</th>
-				<th>작성일</th>
-			</tr>
-		</thead>
-		<tbody>
-		<%
-			for(Board b : boardList) {
-		%>
-			<tr>
-				<td><%=b.getLocalName()%></td>
-				<td>
-					<a href="<%=request.getContextPath()%>/board/boardOne.jsp?boardNo=<%=b.getBoardNo()%>">
-						<%=b.getBoardTitle()%>
-					</a>
-				</td>
-				<td><%=b.getCreatedate()%></td>
-			</tr>
-		<%		
-			}
-		%>
-		</tbody>	
-	</table>
- 
-	</div>
-	<!---[끝]boardList--------------------------------------------------->
-	
-	<!-- 페이지네이션 -->
-	<div class="text-center">
-	<%
-		// '이전'은 현재 페이지가 1보다 클때만 보여준다
-		if(currentPage > 1) {
-	%>
-			<a href="./home.jsp?localName=<%=localName%>&currentPage=<%=currentPage-1%>"
-				class="btn btn-light">이전</a>
-	<%		
-		}
-	%>
-			<%=currentPage%>페이지
-	<%	
-		// '다음'은 마지막페이지 전까지만 보여준다
-		if(currentPage < lastPage) {	
-	%>
-			<a href="./home.jsp?localName=<%=localName%>&currentPage=<%=currentPage+1%>" 
-				class="btn btn-light">다음</a>
-	<%
-		}
-	%>
-	<br>
-		마지막 페이지 <%=lastPage%>
-	</div>
+        
+	<!-- Bootstrap core JS-->
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+	<!-- Core theme JS-->
+	<script src="js/scripts.js"></script>
 	
 	<!-- include 페이지 : Copyright &copy; 구디아카데미 -->
 	<div>
