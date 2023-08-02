@@ -88,13 +88,13 @@
 				
 				<!-- 오류 메시지 -->
 				<span class="text-danger">
-					<%
-						if(request.getParameter("msg") != null){
-					%>
-						<%=request.getParameter("msg")%>
-					<%
-						}
-					%>
+				<%
+					if(request.getParameter("msg") != null){
+				%>
+					<%=request.getParameter("msg")%>
+				<%
+					}
+				%>
 				</span>
 			</div>
 		</form>

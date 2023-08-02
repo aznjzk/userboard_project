@@ -46,9 +46,12 @@
 					</tr>
 				</table>
 			</div>
-		
-			<!-- 오류 메시지 -->
-			<div class="text-danger">
+	
+			<div>	
+				<button type="submit" class="btn btn-outline-primary">지역추가</button>
+			
+				<!-- 오류 메시지 -->
+				<span class="text-danger">
 				<%
 					if(request.getParameter("msg") != null){
 				%>
@@ -56,10 +59,7 @@
 				<%
 					}
 				%>
-			</div>	
-		
-			<div>	
-				<button type="submit" class="btn btn-outline-primary">지역추가</button>
+				</span>
 			</div>	
 		</form>
 	</div>

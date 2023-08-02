@@ -70,11 +70,12 @@
 	}
 	
 	// useCnt가 0이 아니면 : 카테고리를 사용하고 있는 게시글이 존재한다는 뜻 → 지역 삭제페이지 재요청
-	if( useCnt != 0){
+	if(useCnt != 0){
 		msg = URLEncoder.encode("해당 카테고리는 사용 중이므로 삭제할 수 없습니다", "utf-8");
 		response.sendRedirect(request.getContextPath()+"/local/deleteLocalForm.jsp?msg=" + msg);
 		return;
 	}
+	
 	
 	// 지역 이름을 삭제하는 쿼리	
 	String deleteLocalSql = "";

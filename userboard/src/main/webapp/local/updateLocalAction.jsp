@@ -61,6 +61,59 @@
 	Class.forName(driver);
 	Connection conn = DriverManager.getConnection(dbUrl, dbUser, dbPw);
 	
+	// 해당 카테고리를 사용 중인 게시물의 개수
+	String useLocalNameSql = "";
+	PreparedStatement useLocalNameStmt = null;
+	ResultSet useLocalNameRs = null;
+	/*
+		SELECT COUNT(*) 
+		FROM board 
+		WHERE local_name = ?
+	*/
+	useLocalNameSql ="SELECT COUNT(*) FROM board WHERE local_name = ?";
+	useLocalNameStmt = conn.prepareStatement(useLocalNameSql);
+	// ? 1개
+	useLocalNameStmt.setString(1, currentLocalName);
+	
+	// 쿼리 실행 결과를 변수에 저장 → 0일 경우 : 해당 카테고리의 게시글 없음 
+	useLocalNameRs = useLocalNameStmt.executeQuery();
+	int useCnt = 0;
+	if(useLocalNameRs.next()){
+		useCnt = useLocalNameRs.getInt("count(*)");
+	}
+	
+	// useCnt가 0이 아니면 : 카테고리를 사용하고 있는 게시글이 존재한다는 뜻 → 지역 수정페이지 재요청
+	if(useCnt != 0){
+		msg = URLEncoder.encode("해당 카테고리는 사용 중이므로 수정할 수 없습니다", "utf-8");
+		response.sendRedirect(request.getContextPath()+"/local/updateLocalForm.jsp?msg=" + msg);
+		return;
+	}
+	
+	
+	// updateLocalName이 이미 존재하는지 확인하는 쿼리
+	String checkLocalNameSql = "";
+	PreparedStatement checkLocalNameStmt = null;
+	ResultSet checkLocalNameRs = null;
+	/*
+		SELECT COUNT(*) 
+		FROM local 
+		WHERE local_name = ?
+	*/
+	checkLocalNameSql = "SELECT COUNT(*) FROM local WHERE local_name = ?";
+	checkLocalNameStmt = conn.prepareStatement(checkLocalNameSql);
+	checkLocalNameStmt.setString(1, updateLocalName);
+	checkLocalNameRs = checkLocalNameStmt.executeQuery();
+
+	// 이미 존재하는 경우
+	if (checkLocalNameRs.next()) {
+	    int count = checkLocalNameRs.getInt(1);
+	    if (count > 0) {
+	        msg = URLEncoder.encode("이미 존재하는 지역입니다.", "utf-8");
+	        response.sendRedirect(request.getContextPath() + "/local/updateLocalForm.jsp?msg=" + msg);
+	        return;
+	    }
+	}
+
 	
 	// 지역 이름을 수정하는 쿼리	
 	String updateLocalSql = "";
@@ -71,7 +124,7 @@
 		SET local_name = ?
 		WHERE local_name = ?
 	*/
-	updateLocalSql = "UPDATE local SET local_name = ? WHERE local_name = ?";
+	updateLocalSql = "UPDATE local SET local_name = ?, updatedate = NOW() WHERE local_name = ?";
 	updateLocalStmt = conn.prepareStatement(updateLocalSql);
 	// ? 2개
 	updateLocalStmt.setString(1, updateLocalName);

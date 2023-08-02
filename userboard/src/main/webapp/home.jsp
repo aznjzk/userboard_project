@@ -182,16 +182,16 @@
 	System.out.println(lastPage + " <-- home lastPage 마지막페이지");
 	
 	/*
-	pagePerPage = 5 일때
+	pagePerPage = 10 일때
 		
 		currentPage	  minPage		  maxPage
-			 1			 1				 5
-			 7			 6				10
-			19			16				20	
+			 1			 1				10
+			13			11				20
+			29			21				30	
 	*/
 		
 	// 하단 페이지목록 : 한 번에 보여줄 페이지의 개수
-	int pagePerPage = 5;
+	int pagePerPage = 10;
 	// 페이지 목록 중 가장 작은 숫자의 페이지
 	int minPage = ((currentPage - 1) / pagePerPage ) * pagePerPage + 1;
 	// 페이지 목록 중 가장 큰 숫자의 페이지
@@ -212,16 +212,19 @@
 	<!-- 구글 폰트 적용 -->
 	<link rel="preconnect" href="https://fonts.googleapis.com">
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-	<link href="https://fonts.googleapis.com/css2?family=Nanum+Pen+Script&display=swap" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Cute+Font&family=Do+Hyeon&display=swap" rel="stylesheet">
 	<style>
-		div{
-			font-family: 'Nanum Pen Script', cursive;
+		.hfont{
+			font-family: 'Black Han Sans', sans-serif;
+		}
+		.pfont{
+			font-family: 'Do Hyeon', sans-serif;
 		}
 	</style>
 </head>
 <body>
 	<!-- 메인메뉴(가로) -->
-	<div>
+	<div class="pfont">
 		<jsp:include page="/inc/mainmenu.jsp"></jsp:include>
 	</div>
 	
@@ -229,15 +232,15 @@
 	<header class="py-5 bg-image border-bottom mb-4">
 	   	<div class="container">
 	       	<div class="text-center my-5">
-	            <h1 class="fw-bolder">Welcome to Blog Home!</h1>
-	            <p class="lead mb-0">A Bootstrap 5 starter layout for your next blog homepage</p>
-	            <p class="lead mb-0">A Bootstrap 5 starter layout for your next blog homepage</p>
-	            <p class="lead mb-0">A Bootstrap 5 starter layout for your next blog homepage</p>
-	            <p class="lead mb-0">A Bootstrap 5 starter layout for your next blog homepage</p>
-	            <p class="lead mb-0">A Bootstrap 5 starter layout for your next blog homepage</p>
-	            <p class="lead mb-0">A Bootstrap 5 starter layout for your next blog homepage</p>
-	            <p class="lead mb-0">A Bootstrap 5 starter layout for your next blog homepage</p>
-	            <p class="lead mb-0">A Bootstrap 5 starter layout for your next blog homepage</p>
+	            <h1 class="fw-bolder hfont">Welcome to Blog Home!</h1>
+	            <p class="lead mb-0 pfont">프로젝트 개요 : 여행 게시판 블로그형식으로 어쩌구 저쩌구 </p>
+	            <p class="lead mb-0 pfont">담당 기능 : 페이징, 게시판출력, 카테고리별 조회, 검색 기능</p>
+	            <p class="lead mb-0 pfont">개발 내용 : 모델1 방식을 사용하여 여행블로그 구현</p>
+	            <p class="lead mb-0 pfont">쇼핑몰 내에서 관리자, 회원, 비회원의 기능별 차등 부여</p>
+	            <p class="lead mb-0 pfont">관리자는 상품, 주문상태, 문의, 리뷰관리, 고객리스트조회, 직원관리 가능</p>
+	            <p class="lead mb-0 pfont">A Bootstrap 5 starter layout for your next blog homepage</p>
+	            <p class="lead mb-0 pfont">개발 환경 : SQL, JavaScript Library JQuery, BootStrap4 Database MariaDB</p>
+	            <p class="lead mb-0 pfont">A Bootstrap 5 starter layout for your next blog homepage</p>
 	        </div>
 	    </div>
 	</header>
@@ -247,13 +250,14 @@
 		<div class="row">
 	        <!-- Side widgets-->
 			<div class="col-lg-3">
+			
 			<!-- login widget : 로그인 폼 -->
 			<%
 				if(session.getAttribute("loginMemberId") == null) {  // 로그인을 하지 않은 경우에만 로그인폼 출력
 			%>
 				<div class="card mb-4">
-				<div class="card-header">login</div>
-					<div class="container text-center">
+				<div class="card-header hfont">login</div>
+					<div class="card-body pfont">
 						<form action="<%=request.getContextPath()%>/member/loginAction.jsp" method="post">
 							<table>
 								<tr>
@@ -265,41 +269,44 @@
 									<td><input class="form-control" type="password" name="memberPw"></td>
 								</tr>
 							</table>
-							<div>
+							
+							<!-- 오류 메시지 -->
+							<div class="d-flex justify-content-center text-danger pfont">
+							<%
+								if(request.getParameter("msg") != null){
+							%>
+									<%=request.getParameter("msg")%>
+							<%
+								}
+							%>
+							</div>
+							
+							<div class="d-flex justify-content-center pfont">
 								<button class="btn btn-primary center" type="submit">로그인</button>
 							</div>
 						</form>
+					</div>
+				</div>
 			<%   
 				} else { // 로그인에 성공한 경우
 				String loginMemberId = (String)(session.getAttribute("loginMemberId"));
 			%>
 				<div class="card mb-4">
-					<div class="container text-center">
+					<div class="text-center pfont">
 						<br>
 						<p><%=loginMemberId%>님 환영합니다&#128075;&#127995;</p>
-						<a class="btn btn-outline-primary" href="<%=request.getContextPath()%>/member/userInformation.jsp">회원정보</a>
-						<a class="btn btn-outline-primary" href="<%=request.getContextPath()%>/member/logoutAction.jsp">로그아웃</a>
-						<br>
-						&nbsp;
-				<%		
-					}
-				%>
-						<!-- 오류 메시지 -->
-						<div class="text-danger">
-					<%
-						if(request.getParameter("msg") != null){
-					%>
-							<%=request.getParameter("msg")%>
-					<%
-						}
-					%>
-						</div> 
+							<a class="btn btn-outline-primary" href="<%=request.getContextPath()%>/member/userInformation.jsp">회원정보</a>
+							<a class="btn btn-outline-primary" href="<%=request.getContextPath()%>/member/logoutAction.jsp">로그아웃</a>
+						<br> &nbsp;
 					</div>
 				</div>
+			<%		
+				}
+			%>
                     
 				<!-- Categories widget : 서브메뉴(세로) subMenuList1모델 출력 -->
 				<div class="card mb-4">
-					<div class="card-header">
+					<div class="card-header hfont">
 					<%
 						if(localName == null || localName.equals("전체")) {
 					%>
@@ -313,114 +320,123 @@
 					%>
 					</div>
 					<div class="card-body">
-						<div class="row">
-							<div class="col-sm-12">
-								<ul class="list-unstyled mb-0">
-								<%
-									for(HashMap<String, Object> m : subMenuList) {
-								%>
-								<li>
-									<a href="<%=request.getContextPath()%>/home.jsp?localName=<%=(String)m.get("localName")%>" style="text-decoration: none">
-										<%=(String)m.get("localName")%>(<%=(Integer)m.get("cnt")%>)
-									</a>
-								</li>
-								<%		
-									}
-								%>
-								</ul>
-							</div>
-						</div>
+						<ul class="list-unstyled mb-0 pfont">
+						<%
+							for(HashMap<String, Object> m : subMenuList) {
+						%>
+						<li>
+							<a href="<%=request.getContextPath()%>/home.jsp?localName=<%=(String)m.get("localName")%>" style="text-decoration: none">
+								<%=(String)m.get("localName")%>(<%=(Integer)m.get("cnt")%>)
+							</a>
+						</li>
+						<%		
+							}
+						%>
+						</ul>
 					</div>
 				</div>
 			
 				<!-- Search widget-->
 				<div class="card mb-4">
-					<div class="card-header">Search</div>
+					<div class="card-header hfont">Search</div>
 					<div class="card-body">
-						<div class="input-group">
+						<div class="input-group pfont">
 							<input class="form-control" type="text" placeholder="Enter search term..." aria-label="Enter search term..." aria-describedby="button-search" />
 							<button class="btn btn-primary" id="button-search" type="button">Go!</button>
 						</div>
 					</div>
 				</div>
 			</div>
-                
+					
 			<!-- Blog entries-->
 			<div class="col-lg-9">
-			<%
-				for(Board b : boardList) {
-			%>
-				<!-- Featured blog post-->
-				<div class="card mb-4">
-				    
-				    <div class="card-body">
-				        <div class="small text-muted"><%=b.getLocalName()%> | <%=b.getCreatedate()%></div>
-						<br>
-						<h2 class="card-title"><%=b.getBoardTitle()%></h2>
-						<p class="card-text"><%=b.getBoardContent()%> . . . <a href="<%=request.getContextPath()%>//board/boardOne.jsp?boardNo=<%=b.getBoardNo()%>" style="text-decoration: none">더보기</a></p>
-				    </div>
-				</div>
-			<%		
-				}
-			%> 
-			</div>
-		    <!-- Pagination -->		
-			<div>
-				<nav aria-label="Pagination">
-				    <hr class="my-0" />
-				    <ul class="pagination justify-content-center my-4">
-				    <%
-						if(minPage != 1) {
-					%>
-						<li class="page-item active" aria-current="page"><a class="page-link" href="./home.jsp?localName=<%=localName%>&currentPage=<%=minPage-5%>">Newer</a></li>
+			<table class="table" frame="void" >
+				<tr>
+					<td>
+						<div class="d-flex justify-content-between align-items-center">
+							<h2 class="hfont"><%=localName%>글보기</h2>
+							<div class="pfont">
+							<a href="" class="btn btn-primary" type="button">글쓰기</a>
+							</div>
+						</div>
+					</td>
+				</tr>
+				<tr>
+					<td>
 					<%
-						} else { // 1페이지에서는 이전버튼 비활성화
+						for(Board b : boardList) {
 					%>
-				        <li class="page-item disabled"><a class="page-link" href="./home.jsp?localName=<%=localName%>&currentPage=<%=minPage-5%>">Newer</a></li>
-				    <%
+						<!-- Featured blog post-->
+						<div class="card mb-4">
+						    <div class="card-body">
+						        <div class="small text-muted pfont"><%=b.getLocalName()%> | <%=b.getCreatedate()%></div>
+								<br>
+								<h2 class="card-title hfont"><%=b.getBoardTitle()%></h2>
+								<p class="card-text pfont"><%=b.getBoardContent()%> . . . <a href="<%=request.getContextPath()%>//board/boardOne.jsp?boardNo=<%=b.getBoardNo()%>" style="text-decoration: none">더보기</a></p>
+						    </div>
+						</div>
+					<%		
 						}
-				    
-						for(int i = minPage; i <= maxPage; i++) {
-							if(i != currentPage) {
-					%>    
-				        	<li class="page-item"><a class="page-link" href="./home.jsp?localName=<%=localName%>&currentPage=<%=i%>"><%=i%></a></li>
-			        <%
-							} else { // 현재페이지에서는 버튼 비활성화
-					%>
-							<li class="page-item disabled">
-								<span class="page-link" tabindex="-1" aria-disabled="true"><%=i%></span>
-							</li>
-					<%
-							}
+					%> 
+					</td>
+				</tr>
+			</table>
+	    	</div>
+	    </div>
+	    
+		<!-- Pagination -->		
+		<div>
+			<nav aria-label="Pagination">
+			<hr class="my-0" />
+				<ul class="pagination justify-content-center my-4 pfont">
+				<%
+					if(minPage != 1) {
+				%>
+					<li class="page-item active" aria-current="page"><a class="page-link" href="./home.jsp?localName=<%=localName%>&currentPage=<%=minPage-pagePerPage%>">Newer</a></li>
+				<%
+					} else { // 1페이지에서는 이전버튼 비활성화
+				%>
+					<li class="page-item disabled"><a class="page-link" href="./home.jsp?localName=<%=localName%>&currentPage=<%=minPage-pagePerPage%>">Newer</a></li>
+				<%
+					}
+				
+					for(int i = minPage; i <= maxPage; i++) {
+						if(i != currentPage) {
+				%>    
+					<li class="page-item"><a class="page-link" href="./home.jsp?localName=<%=localName%>&currentPage=<%=i%>"><%=i%></a></li>
+				<%
+						} else { // 현재페이지에서는 버튼 비활성화
+				%>
+					<li class="page-item disabled">
+						<span class="page-link" tabindex="-1" aria-disabled="true"><%=i%></span>
+					</li>
+				<%
 						}
-						
-						if(maxPage != lastPage) {
-					%>
+					}
+				
+					if(maxPage != lastPage) {
+				%>
 						<li class="page-item active"><a class="page-link" href="./home.jsp?localName=<%=localName%>&currentPage=<%=maxPage+1%>">Older</a></li>
-					<%
-						} else { // 마지막 페이지에서는 다음버튼 비활성화
-					%>
+				<%
+					} else { // 마지막 페이지에서는 다음버튼 비활성화
+				%>
 						<li class="page-item disabled" aria-current="page"><a class="page-link" href="./home.jsp?localName=<%=localName%>&currentPage=<%=maxPage+1%>">Older</a></li>
-				    <%
-						}
-				    %>
-				    
-				    </ul>
-				</nav>
-			</div>
+				<%
+					}
+				%>
+				</ul>
+			</nav>
 		</div>
 	</div>
-		</div>
+	
+	<!-- include 페이지 : Copyright &copy; 구디아카데미 -->
+	<div class="pfont">
+		<jsp:include page="/inc/copyright.jsp"></jsp:include>
 	</div>
-        
+	
 	<!-- Bootstrap core JS-->
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
 	<!-- Core theme JS-->
 	<script src="js/scripts.js"></script>
-	
-	<!-- include 페이지 : Copyright &copy; 구디아카데미 -->
-	<div>
-		<jsp:include page="/inc/copyright.jsp"></jsp:include>
-	</div>
 </body>
 </html>

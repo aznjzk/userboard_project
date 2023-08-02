@@ -2,7 +2,7 @@
 <%@ page import = "java.net.*" %>
 <%@ page import = "java.sql.*" %>
 <%@ page import = "java.util.*" %>
-<%@ page import="vo.*" %>
+<%@ page import = "vo.*" %>
 <%
 	// 인코딩 처리
 	request.setCharacterEncoding("UTF-8");
@@ -93,9 +93,11 @@
 					</tr>
 				</table>
 			</div>	
-			
-			<!-- 오류 메시지 -->
-			<div class="text-danger">
+			<div>
+				<button type="submit" class="btn btn-outline-primary">지역수정</button>
+				
+				<!-- 오류 메시지 -->
+				<span class="text-danger">
 				<%
 					if(request.getParameter("msg") != null){
 				%>
@@ -103,10 +105,7 @@
 				<%
 					}
 				%>
-			</div>
-			
-			<div>
-				<button type="submit" class="btn btn-outline-primary">지역수정</button>
+				</span>
 			</div>
 		</form>
 	</div>

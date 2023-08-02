@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 
 <!-- Core theme CSS (includes Bootstrap)-->
-<link href="css/styles.css" rel="stylesheet" />
+<link href="<%=request.getContextPath() %>/css/styles.css" rel="stylesheet" />
 
 <!-- Responsive navbar-->
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
@@ -21,7 +21,7 @@
 			%>
 				<li class="nav-item"><a class="nav-link" href="<%=request.getContextPath()%>/local/category.jsp">카테고리 관리</a></li>
 				<li class="nav-item"><a class="nav-link" href="<%=request.getContextPath()%>/">게시글 관리</a></li>
-				<li class="nav-item"><a class="nav-link active" aria-current="page" href="<%=request.getContextPath()%>/">댓글 관리</a></li>
+				<li class="nav-item"><a class="nav-link" aria-current="page" href="<%=request.getContextPath()%>/">댓글 관리</a></li>
 			<%
 				}
 			%>
@@ -29,3 +29,8 @@
 		</div>
 	</div>
 </nav>
+
+<!-- Bootstrap core JS-->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+<!-- Core theme JS-->
+<script src="js/scripts.js"></script>
