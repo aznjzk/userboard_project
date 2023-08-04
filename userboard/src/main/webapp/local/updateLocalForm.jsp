@@ -51,10 +51,22 @@
 	<!-- 부트스트랩5 사용 -->
 	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+	<!-- 구글 폰트 적용 -->
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Cute+Font&family=Do+Hyeon&display=swap" rel="stylesheet">
+	<style>
+		.hfont{
+			font-family: 'Black Han Sans', sans-serif;
+		}
+		.pfont{
+			font-family: 'Do Hyeon', sans-serif;
+		}
+	</style>
 </head>
 <body>
 	<!-- 메인메뉴(가로) -->
-	<div>
+	<div class="pfont">
 		<jsp:include page="/inc/mainmenu.jsp"></jsp:include>
 	</div>
 	
@@ -62,9 +74,9 @@
 	
 	<div class="container">
 		<!-- 지역 카테고리 수정 -->
-		<h1>카테고리 수정</h1>
+		<h1 class="hfont">카테고리 수정</h1>
 		<form action="<%=request.getContextPath()%>/local/updateLocalAction.jsp" method="post">
-			<div>	
+			<div class="pfont">	
 				<table class="table">
 					<tr>
 						<th>수정할 지역 이름을 선택해 주세요</th>
@@ -93,7 +105,7 @@
 					</tr>
 				</table>
 			</div>	
-			<div>
+			<div class="pfont">
 				<button type="submit" class="btn btn-outline-primary">지역수정</button>
 				
 				<!-- 오류 메시지 -->
@@ -110,14 +122,14 @@
 		</form>
 	</div>
 	
+	<!-- include 페이지 : Copyright &copy; 구디아카데미 -->
+	<div class="pfont">
+		<jsp:include page="/inc/copyright.jsp"></jsp:include>
+	</div>
+	
 	<!-- Bootstrap core JS-->
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
 	<!-- Core theme JS-->
 	<script src="js/scripts.js"></script>
-	
-	<!-- include 페이지 : Copyright &copy; 구디아카데미 -->
-	<div>
-		<jsp:include page="/inc/copyright.jsp"></jsp:include>
-	</div>
 </body>
 </html>
