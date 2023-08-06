@@ -14,18 +14,29 @@
 	
 /* ------------------------------ 1. 컨트롤러 계층 ------------------------------ */
 
-	// 요청분석 : 게시글입력 → DB에 저장
+	// 요청분석 : 로그인 한 사람만 게시글 입력 가능 → DB에 저장
+
+	// 에러메시지 담을 때 사용할 변수
+	String msg = null;
+	
 
 	/* 세션 유효성 검사 */ 
-	// 로그인 하지 않으면 댓글입력 할 수 없음 → 홈페이지 재요청
+	// 로그인 하지 않으면 게시글 입력 할 수 없음 → 홈페이지 재요청
 	if(session.getAttribute("loginMemberId") == null){
-		response.sendRedirect(request.getContextPath() + "/home.jsp");
+		msg = URLEncoder.encode("로그인 후 이용해 주세요.", "utf-8");
+		response.sendRedirect(request.getContextPath() + "/home.jsp?msg=" + msg);
 		return;
 	}
+	
+	// 유효성 검사 통과하면 변수에 저장
+	String loginMemberId = (String)session.getAttribute("loginMemberId");
+	// 디버깅
+	System.out.println(loginMemberId + " <-- insertBoardAction 변수 loginMemberId");
 
+	
 	/* 요청값 유효성 검사 */
+	// 요청값이 null이거나 공백이면 → 게시글 입력 페이지 재요청 및 오류메세지 출력
 	// localName, boardTitle, boardContent
-	String msg = null;
 	if(request.getParameter("localName") == null
 			|| request.getParameter("localName").equals("")) {
 		msg = URLEncoder.encode("카테고리를 선택해주세요","utf-8");
@@ -53,7 +64,7 @@
 	System.out.println(boardTitle + " <-- insertBoardAction boardTitle");
 	System.out.println(boardContent + " <-- insertBoardAction boardContent");
 	
-	// 1-4) 파라미터값 클래스에 저장
+	// 파라미터값 클래스에 저장
 	Board paramBoard = new Board();
 	paramBoard.setMemberId(memberId);
 	paramBoard.setLocalName(localName);

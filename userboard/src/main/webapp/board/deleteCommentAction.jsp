@@ -50,7 +50,7 @@
 	ResultSet deleteCommentRs = null;
 	/*
 		DELETE FROM comment
-		WHERE member_id = ? 
+		WHERE member_id = ?, comment_no = ? 
 	*/
 	
 	deleteCommentSql = "DELETE FROM comment WHERE member_id = ? ";
