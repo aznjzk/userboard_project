@@ -5,7 +5,7 @@
 <%@ page import = "vo.*" %>
 <%
 	// 인코딩 처리
-	response.setCharacterEncoding("UTF-8");
+	request.setCharacterEncoding("UTF-8");
 
 	// ANSI CODE	
 	final String RESET = "\u001B[0m"; 
@@ -178,31 +178,31 @@
 			<h1 class="hfont">게시글 상세내용</h1>
 			<table class="table table-bordered pfont">
 				<tr>
-					<th>번호</th><!-- 1행 -->
+					<th class="table-secondary">번호</th>
 					<td><%=board.getBoardNo()%></td>
 				</tr>
 				<tr>
-					<th>지역</th><!-- 2행 -->
+					<th class="table-secondary">지역</th>
 					<td><%=board.getLocalName()%></td>
 				</tr>
 				<tr>
-					<th>제목</th><!-- 3행 -->
+					<th class="table-secondary">제목</th>
 					<td><%=board.getBoardTitle()%></td>
 				</tr>
 				<tr>
-					<th>본문</th><!-- 4행 -->
+					<th class="table-secondary">본문</th>
 					<td><%=board.getBoardContent()%></td>
 				</tr>
 				<tr>
-					<th>작성자</th><!-- 5행 -->
+					<th class="table-secondary">작성자</th>
 					<td><%=board.getMemberId()%></td>
 				</tr>
 				<tr>
-					<th>작성일</th><!-- 6행 -->
+					<th class="table-secondary">작성일</th>
 					<td><%=board.getCreatedate()%></td>
 				</tr>
 				<tr>
-					<th>수정일</th><!-- 7행 -->
+					<th class="table-secondary">수정일</th>
 					<td><%=board.getUpdatedate()%></td>
 				</tr>
 			</table>
@@ -213,12 +213,12 @@
 			if(loginMemberId != null
 			&& loginMemberId.equals(board.getMemberId())) { 
 		%>
-		<div>
-			<form action="<%=request.getContextPath()%>/board/deleteBoardAction.jsp" method="post">
-				<button type="submit" class="btn btn-light" style="float:right">삭제</button>
+		<div class="pfont">
+			<form action="<%=request.getContextPath()%>/board/deleteBoardAction.jsp?boardNo=<%=boardNo%>&memberId=<%=board.getMemberId()%>" method="post">
+				<button type="submit" class="btn btn-outline-secondary" style="float:right">삭제</button>
 			</form>
-			<form action="<%=request.getContextPath()%>/board/updateBoardAction.jsp" method="post">
-				<button type="submit" class="btn btn-light" style="float:right">수정</button>
+			<form action="<%=request.getContextPath()%>/board/updateBoardForm.jsp?boardNo=<%=boardNo%>&memberId=<%=board.getMemberId()%>" method="post">
+				<button type="submit" class="btn btn-outline-secondary" style="float:right">수정</button>
 			</form>
 		</div>
 		<%
@@ -232,6 +232,16 @@
 		
 		<!--  3-2) comment 입력 : 세션 유무에 따른 분기 -->
 		<h2 class="hfont">댓글</h2>
+		<!-- 오류 메시지 -->
+		<div class="text-danger pfont">
+			<%
+				if(request.getParameter("msg") != null) {
+			%>
+				<%=request.getParameter("msg")%>
+			<%
+				}
+			%>
+		</div> 
 		<%
 			// 로그인 사용자만 댓글 입력 허용
 			if(loginMemberId != null) {
@@ -246,12 +256,12 @@
 						</tr>	
 						<tr>	
 							<td>
-								<textarea rows="2" cols="80" name="commentContent"></textarea>
+								<textarea cols="175" name="commentContent"></textarea>
 							</td>
 						</tr>
 						<tr>
 							<td>
-								<button type="submit" class="btn btn-light" style="float:right">등록</button>
+								<button type="submit" class="btn btn-outline-secondary" style="float:right">등록</button>
 							</td>
 						</tr>
 					</table>
@@ -260,17 +270,6 @@
 			}
 		%>
 		
-		<!-- 오류 메시지 -->
-		<div class="text-danger pfont">
-			<%
-				if(request.getParameter("msg") != null) {
-			%>
-				<%=request.getParameter("msg")%>
-			<%
-				}
-			%>
-		</div> 
-		
 		<br>
 	
 		<!--  3-3) comment list 결과셋 : 로그인 여부에 따라 분기 -->
@@ -278,50 +277,50 @@
 			<%
 				for(Comment c : commentList) {
 			%>
-			<table class="table">	
-				<thead class="table-light">
-				<tr>
-					<th><%=c.getMemberId()%></th>
-				</tr>
-				</thead>
-				<tbody>
-				<tr>
-					<td><%=c.getCommentContent()%></td>
-				<tr>
-				</tr>
-				<tr>
-					<td style="color:gray"> 
-						작성 : <%=c.getCreatedate()%>
-						/ 수정 : <%=c.getUpdatedate()%>
-					</td>
-				</tr>
-			
+				<table class="table">	
+					<thead class="table-secondary">
+					<tr>
+						<th><%=c.getMemberId()%></th>
+					</tr>
+					</thead>
+					<tbody>
+					<tr>
+						<td><%=c.getCommentContent()%></td>
+					<tr>
+					</tr>
+					<tr>
+						<td style="color:gray"> 
+							작성 : <%=c.getCreatedate()%>
+							/ 수정 : <%=c.getUpdatedate()%>
+						</td>
+					</tr>
 				
+					
 			<%	// 로그인한 사용자이면서 && 로그인 아이디와 댓글 작성자가 같을 때만 → 수정,삭제 허용 
-				if(loginMemberId != null
-				&& loginMemberId.equals(c.getMemberId())){ 
+					if(loginMemberId != null
+					&& loginMemberId.equals(c.getMemberId())){ 
 			%>		
-				<tr>
-					<td>
-						<form action="<%=request.getContextPath()%>/board/deleteCommentAction.jsp" method="post">
-							<button type="submit" class="btn btn-light" style="float:right">삭제</button>
-						</form>
-						<form action="<%=request.getContextPath()%>/board/updateCommentForm.jsp?boardNo=<%=board.getBoardNo()%>&commentNo=<%=c.getCommentNo()%>" method="post">
-							<button type="submit" class="btn btn-light" style="float:right">수정</button>
-						</form>
-					</td>
-				</tr>
-				
+					<tr>
+						<td>
+							<form action="<%=request.getContextPath()%>/board/deleteCommentAction.jsp" method="post">
+								<button type="submit" class="btn btn-outline-secondary" style="float:right">삭제</button>
+							</form>
+							<form action="<%=request.getContextPath()%>/board/updateCommentForm.jsp?boardNo=<%=board.getBoardNo()%>&commentNo=<%=c.getCommentNo()%>" method="post">
+								<button type="submit" class="btn btn-outline-secondary" style="float:right">수정</button>
+							</form>
+						</td>
+					</tr>
 			<%
-				}
-			
+					}
 				}
 			%>
-			</tbody>
-		</table>
+				</tbody>
+			</table>
 		
-		<!-- comment 페이징 -->
-		<%=currentPage%>페이지
+			<!-- comment 페이징 -->
+			<div class="text-center pfont">
+				<%=currentPage%>페이지
+			</div>
 		</div>
 	</div>
 	<!------------------------------------------------------------- [끝] 댓글 --->

@@ -9,11 +9,11 @@
 	// 요청분석 : 로그인 안 했을 때만, 로그인 가능
 	
 	// 에러메시지 담을 때 사용할 변수
-	String msg = null;
+	String idMsg = null;
 
 	// session 유효성 검사
 	if(session.getAttribute("loginMemberId") != null){
-		msg = URLEncoder.encode("이미 로그인 되었습니다", "utf-8");
+		idMsg = URLEncoder.encode("이미 로그인 되었습니다", "utf-8");
 		response.sendRedirect(request.getContextPath() + "/home.jsp");
 		return;
 	}
@@ -21,13 +21,13 @@
 	// 요청값 유효성 검사
 	if(request.getParameter("memberId") == null 
 			|| request.getParameter("memberId").equals("")) {
-			msg = URLEncoder.encode("아이디를 입력해 주세요", "utf-8");
+			idMsg = URLEncoder.encode("아이디를 입력해 주세요", "utf-8");
 	} else if(request.getParameter("memberPw") == null 
 			|| request.getParameter("memberPw").equals("")) {
-			msg = URLEncoder.encode("비밀번호를 입력해 주세요", "utf-8");
+			idMsg = URLEncoder.encode("비밀번호를 입력해 주세요", "utf-8");
 	}
-	if(msg != null) { // 위 ifelse문에 하나라도 해당된다
-		response.sendRedirect(request.getContextPath()+"/home.jsp?msg="+msg);
+	if(idMsg != null) { // 위 ifelse문에 하나라도 해당된다
+		response.sendRedirect(request.getContextPath()+"/home.jsp?idMsg="+idMsg);
 		return;
 	}
 	
@@ -67,7 +67,7 @@
 		return;
 	} else { // 로그인 실패시
 		System.out.println("로그인 실패");
-		msg = URLEncoder.encode("아이디 또는 패스워드를 잘못 입력하였습니다", "utf-8");
+		idMsg = URLEncoder.encode("아이디 또는 패스워드를 잘못 입력하였습니다", "utf-8");
 	}
-	response.sendRedirect(request.getContextPath()+"/home.jsp?msg=" + msg);
+	response.sendRedirect(request.getContextPath()+"/home.jsp?idMsg=" + idMsg);
 %>

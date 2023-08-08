@@ -5,7 +5,7 @@
 <%@ page import = "vo.*" %>
 <%
 	// 인코딩 처리
-	response.setCharacterEncoding("UTF-8");
+	request.setCharacterEncoding("UTF-8");
 
 	// ANSI CODE	
 	final String RESET = "\u001B[0m"; 
@@ -161,133 +161,150 @@
 	<!-- 부트스트랩5 사용 -->
 	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+	<!-- 구글 폰트 적용 -->
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Cute+Font&family=Do+Hyeon&display=swap" rel="stylesheet">
+	<style>
+		.hfont{
+			font-family: 'Black Han Sans', sans-serif;
+		}
+		.pfont{
+			font-family: 'Do Hyeon', sans-serif;
+		}
+	</style>
 </head>
 <body>
 	<!-- 메인메뉴(가로) -->
-	<div>
+	<div class="pfont">
 		<jsp:include page="/inc/mainmenu.jsp"></jsp:include>
 	</div>
 	
 	<br>
 	
 	<!--- [시작] 게시글 ------------------------------------------------------------->
+	<div class="container">
 	
-	<!-- 3-1) board one 결과셋 -->
-	<div>
-	<h1>게시글 상세내용</h1>
-		<table class="table table-bordered">
-			<tr>
-				<th>번호</th><!-- 1행 -->
-				<td><%=board.getBoardNo()%></td>
-			</tr>
-			<tr>
-				<th>지역</th><!-- 2행 -->
-				<td><%=board.getLocalName()%></td>
-			</tr>
-			<tr>
-				<th>제목</th><!-- 3행 -->
-				<td><%=board.getBoardTitle()%></td>
-			</tr>
-			<tr>
-				<th>본문</th><!-- 4행 -->
-				<td><%=board.getBoardContent()%></td>
-			</tr>
-			<tr>
-				<th>작성자</th><!-- 5행 -->
-				<td><%=board.getMemberId()%></td>
-			</tr>
-			<tr>
-				<th>작성일</th><!-- 6행 -->
-				<td><%=board.getCreatedate()%></td>
-			</tr>
-			<tr>
-				<th>수정일</th><!-- 7행 -->
-				<td><%=board.getUpdatedate()%></td>
-			</tr>
-		</table>
-	</div>
-	
-	<br>
-	
-	<!--  게시글 작성자와 로그인 아이디가 같은 경우만 게시글 수정삭제 가능 -->
-	<%
-		if(loginMemberId.equals(board.getMemberId())){
-	%>
-	<div>
-		<a href="" class="btn btn-light">수정</a>
-		<a href="" class="btn btn-light">삭제</a>
-	</div>
-	<%
-		}
-	%>
-	
-	<br>
-	
-	<!------------------------------------------------------------- [끝] 게시글 --->
-	
-	<!-- 오류 메시지 -->
-	<div class="text-danger">
-		<%
-			if(request.getParameter("msg") != null){
+		<!-- 3-1) board one 결과셋 -->
+		<div>
+			<h1 class="hfont">게시글 상세내용</h1>
+			<table class="table table-bordered pfont">
+				<tr>
+					<th class="table-secondary">번호</th>
+					<td><%=board.getBoardNo()%></td>
+				</tr>
+				<tr>
+					<th class="table-secondary">지역</th>
+					<td><%=board.getLocalName()%></td>
+				</tr>
+				<tr>
+					<th class="table-secondary">제목</th>
+					<td><%=board.getBoardTitle()%></td>
+				</tr>
+				<tr>
+					<th class="table-secondary">본문</th>
+					<td><%=board.getBoardContent()%></td>
+				</tr>
+				<tr>
+					<th class="table-secondary">작성자</th>
+					<td><%=board.getMemberId()%></td>
+				</tr>
+				<tr>
+					<th class="table-secondary">작성일</th>
+					<td><%=board.getCreatedate()%></td>
+				</tr>
+				<tr>
+					<th class="table-secondary">수정일</th>
+					<td><%=board.getUpdatedate()%></td>
+				</tr>
+			</table>
+		</div>
+		
+		<!-- 수정, 삭제 버튼 -->
+		<%	// 로그인한 사용자이면서 && 로그인 아이디와 게시글 작성자가 같을 때만 → 수정,삭제 허용 
+			if(loginMemberId != null
+			&& loginMemberId.equals(board.getMemberId())) { 
 		%>
-			<%=request.getParameter("msg")%>
+		<div class="pfont">
+			<form action="<%=request.getContextPath()%>/board/deleteBoardAction.jsp?boardNo=<%=boardNo%>&memberId=<%=board.getMemberId()%>" method="post">
+				<button type="submit" class="btn btn-outline-secondary" style="float:right">삭제</button>
+			</form>
+			<form action="<%=request.getContextPath()%>/board/updateBoardForm.jsp?boardNo=<%=boardNo%>&memberId=<%=board.getMemberId()%>" method="post">
+				<button type="submit" class="btn btn-outline-secondary" style="float:right">수정</button>
+			</form>
+		</div>
 		<%
 			}
 		%>
-	</div> 
-	
-	<br>
-
-	<!--- [시작] 댓글 ------------------------------------------------------------->
-	<!--  3-3) comment list 결과셋 : 로그인 여부에 따라 분기 -->
+		<br>
+		
+		<!------------------------------------------------------------- [끝] 게시글 --->
+		
+		<!--- [시작] 댓글 ------------------------------------------------------------->
+		
+		<!--  3-2) comment 입력 : 세션 유무에 따른 분기 -->
+		<h2 class="hfont">댓글</h2>
+		<!-- 오류 메시지 -->
+		<div class="text-danger pfont">
+			<%
+				if(request.getParameter("msg") != null) {
+			%>
+				<%=request.getParameter("msg")%>
+			<%
+				}
+			%>
+		</div> 
 	<%
 		for(Comment c : commentList) {
 	%>
-		<table class="table">	
-			<thead class="table-light">
-			<tr>
-				<th><%=c.getMemberId()%></th>
-			</tr>
+		<table class="table pfont">	
+			<thead class="table-secondary">
+				<tr>
+					<th><%=c.getMemberId()%></th>
+				</tr>
 			</thead>
 			<tbody>
-			<tr>
-				<td><%=c.getCommentContent()%></td>
-			<tr>
-			</tr>
-			<tr>
-				<td style="color:gray"> 
-					작성 : <%=c.getCreatedate()%>
-					/ 수정 : <%=c.getUpdatedate()%>
-				</td>
-			</tr>
-		
-			
-	<%	// 로그인한 사용자이면서 && 로그인 아이디와 댓글 작성자가 같을 때만 → 수정,삭제 허용 
+	<%		// 로그인한 사용자이면서 && 로그인 아이디와 댓글 작성자가 같을 때만 → 수정 허용 
 			if(loginMemberId != null
 			&& loginMemberId.equals(c.getMemberId())){ 
 	%>		
-			<tr>
-				<td>
-					<form action="<%=request.getContextPath()%>/board/updateCommentAction.jsp" method="post">
-						<input type="hidden" name="boardNo" value="<%=board.getBoardNo()%>">
-						<textarea rows="2" cols="80" name="updateCommentContent"><%=c.getCommentContent()%></textarea>
-						<button type="submit" class="btn btn-light" style="float:right">수정</button>
-					</form>	
+				<tr>
+					<td>
+						<form action="<%=request.getContextPath()%>/board/updateCommentAction.jsp" method="post">
+							<input type="hidden" name="boardNo" value="<%=board.getBoardNo()%>">
+							<input type="hidden" name="commentNo" value="<%=c.getCommentNo()%>">
+							<textarea rows="2" cols="80" name="updateCommentContent"><%=c.getCommentContent()%></textarea>
+							<button type="submit" class="btn btn-secondary" style="float:right">수정</button>
+						</form>
+					</td>
+				</tr>
 	<%
-			} 
-		
+			} else {
+	%>
+				<tr>
+					<td><%=c.getCommentContent()%></td>
+				</tr>
+	<%		
+			}
+	%>
+				<tr>
+					<td style="color:gray"> 
+						작성 : <%=c.getCreatedate()%>
+						/ 수정 : <%=c.getUpdatedate()%>
+					</td>
+				</tr>
+			</tbody>
+	<%
 		}
 	%>		
-			</td>
-			</tr>
-		</tbody>
-	</table>
-
+				
+		</table>
+	</div>
 	
 	
 	
 	<!-- comment 페이징 -->
-	<div>
+	<div class="text-center pfont">
 		<%=currentPage%>페이지
 	</div>
 	

@@ -20,8 +20,10 @@
 				} else { 
 			%>
 				<li class="nav-item"><a class="nav-link" href="<%=request.getContextPath()%>/local/category.jsp">카테고리 관리</a></li>
+				<!--  
 				<li class="nav-item"><a class="nav-link" href="<%=request.getContextPath()%>/">게시글 관리</a></li>
 				<li class="nav-item"><a class="nav-link" aria-current="page" href="<%=request.getContextPath()%>/">댓글 관리</a></li>
+				-->
 			<%
 				}
 			%>

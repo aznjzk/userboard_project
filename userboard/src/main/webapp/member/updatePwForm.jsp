@@ -1,6 +1,9 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ page import = "java.net.*" %>
 <%
+	// 인코딩 처리
+	request.setCharacterEncoding("UTF-8");
+
 	// 요청분석 : 로그인 되어있을때만, 비밀번호 변경 가능
 	
 	// 에러메시지 담을 때 사용할 변수

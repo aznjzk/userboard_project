@@ -82,15 +82,15 @@
 			<div class="col text-end justify-content-end">
 				<!-- 지역 카테고리 추가 수정 삭제 버튼 -->
 				<div class="pfont">
-					<a class="btn btn-outline-primary" href="<%=request.getContextPath()%>/local/insertLocalForm.jsp">지역 추가</a>
-					<a class="btn btn-outline-primary" href="<%=request.getContextPath()%>/local/updateLocalForm.jsp">지역 수정</a>
-					<a class="btn btn-outline-primary" href="<%=request.getContextPath()%>/local/deleteLocalForm.jsp">지역 삭제</a>
+					<a class="btn btn-outline-secondary" href="<%=request.getContextPath()%>/local/insertLocalForm.jsp">지역 추가</a>
+					<a class="btn btn-outline-secondary" href="<%=request.getContextPath()%>/local/updateLocalForm.jsp">지역 수정</a>
+					<a class="btn btn-outline-secondary" href="<%=request.getContextPath()%>/local/deleteLocalForm.jsp">지역 삭제</a>
 				</div>
 			</div>
 		</div>
 		
 		<!-- 오류 메시지 -->
-		<div class="text-primary pfont">
+		<div class="text-danger pfont">
 			<%
 				if(request.getParameter("msg") != null){
 			%>

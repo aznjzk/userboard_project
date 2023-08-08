@@ -4,7 +4,7 @@
 <%@ page import = "vo.*" %>
 <%
 	// 인코딩 처리
-	response.setCharacterEncoding("UTF-8");
+	request.setCharacterEncoding("UTF-8");
 
 	//ANSI CODE	
 	final String RESET = "\u001B[0m"; 

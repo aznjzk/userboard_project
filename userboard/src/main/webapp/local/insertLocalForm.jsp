@@ -60,7 +60,7 @@
 			</div>
 	
 			<div class="pfont">	
-				<button type="submit" class="btn btn-outline-primary">지역추가</button>
+				<button type="submit" class="btn btn-outline-secondary">지역추가</button>
 			
 				<!-- 오류 메시지 -->
 				<span class="text-danger">

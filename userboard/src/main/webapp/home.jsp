@@ -5,7 +5,7 @@
 <%@ page import = "vo.*" %>
 <%
 	// 인코딩 처리
-	response.setCharacterEncoding("UTF-8");
+	request.setCharacterEncoding("UTF-8");
 
 	// ANSI CODE	
 	final String RESET = "\u001B[0m"; 
@@ -17,6 +17,9 @@
 	
 /*------------------------------ 1. 요청분석(컨트롤러 계층) -----------------------------*/
 	
+	// 현재 로그인 사용자의 Id
+	String loginMemberId = (String)session.getAttribute("loginMemberId");;
+
 	/* 현재 파라미터값 디버깅 */
 	System.out.println(CYAN + request.getParameter("localName") + " <-- home param localName" + RESET);
 	System.out.println(CYAN + request.getParameter("currentPage") + " <-- home param currentPage" + RESET);
@@ -220,6 +223,10 @@
 		.pfont{
 			font-family: 'Do Hyeon', sans-serif;
 		}
+		.aa{
+			color: #6C757D;
+			text-decoration: none;
+			}
 	</style>
 </head>
 <body>
@@ -273,30 +280,30 @@
 							<!-- 오류 메시지 -->
 							<div class="d-flex justify-content-center text-danger pfont">
 							<%
-								if(request.getParameter("msg") != null){
+								if(request.getParameter("idMsg") != null){
 							%>
-									<%=request.getParameter("msg")%>
+									<%=request.getParameter("idMsg")%>
 							<%
 								}
 							%>
 							</div>
 							
 							<div class="d-flex justify-content-center pfont">
-								<button class="btn btn-primary center" type="submit">로그인</button>
+								<button class="btn btn-secondary center" type="submit">로그인</button>
 							</div>
 						</form>
 					</div>
 				</div>
 			<%   
 				} else { // 로그인에 성공한 경우
-				String loginMemberId = (String)(session.getAttribute("loginMemberId"));
+				loginMemberId = (String)(session.getAttribute("loginMemberId"));
 			%>
 				<div class="card mb-4">
 					<div class="text-center pfont">
 						<br>
 						<p><%=loginMemberId%>님 환영합니다&#128075;&#127995;</p>
-							<a class="btn btn-outline-primary" href="<%=request.getContextPath()%>/member/userInformation.jsp">회원정보</a>
-							<a class="btn btn-outline-primary" href="<%=request.getContextPath()%>/member/logoutAction.jsp">로그아웃</a>
+							<a class="btn btn-outline-secondary" href="<%=request.getContextPath()%>/member/userInformation.jsp">회원정보</a>
+							<a class="btn btn-secondary" href="<%=request.getContextPath()%>/member/logoutAction.jsp">로그아웃</a>
 						<br> &nbsp;
 					</div>
 				</div>
@@ -325,7 +332,7 @@
 							for(HashMap<String, Object> m : subMenuList) {
 						%>
 						<li>
-							<a href="<%=request.getContextPath()%>/home.jsp?localName=<%=(String)m.get("localName")%>" style="text-decoration: none">
+							<a href="<%=request.getContextPath()%>/home.jsp?localName=<%=(String)m.get("localName")%>" class="aa">
 								<%=(String)m.get("localName")%>(<%=(Integer)m.get("cnt")%>)
 							</a>
 						</li>
@@ -342,7 +349,7 @@
 					<div class="card-body">
 						<div class="input-group pfont">
 							<input class="form-control" type="text" placeholder="Enter search term..." aria-label="Enter search term..." aria-describedby="button-search" />
-							<button class="btn btn-primary" id="button-search" type="button">Go!</button>
+							<button class="btn btn-secondary" id="button-search" type="button">Go!</button>
 						</div>
 					</div>
 				</div>
@@ -355,9 +362,28 @@
 					<td>
 						<div class="d-flex justify-content-between align-items-center">
 							<h2 class="hfont"><%=localName%>글보기</h2>
-							<div class="pfont">
-							<a href="" class="btn btn-primary" type="button">글쓰기</a>
-							</div>
+							
+							<!-- 오류 메시지 -->
+							<p class="d-flex justify-content-center text-danger pfont">
+							<%
+								if(request.getParameter("msg") != null){
+							%>
+									<%=request.getParameter("msg")%>
+							<%
+								}
+							%>
+							</p>
+							
+							<!-- 글쓰기 버튼 -->
+							<%	// 로그인되어있을때만 글쓰기 허용 
+								if(loginMemberId != null) { 
+							%>
+								<div class="pfont">
+									<a href="<%=request.getContextPath()%>/board/insertBoardForm.jsp" class="btn btn-secondary" type="button">글쓰기</a>
+								</div>
+							<%
+								}
+							%>
 						</div>
 					</td>
 				</tr>
@@ -372,7 +398,7 @@
 						        <div class="small text-muted pfont"><%=b.getLocalName()%> | <%=b.getCreatedate()%></div>
 								<br>
 								<h2 class="card-title hfont"><%=b.getBoardTitle()%></h2>
-								<p class="card-text pfont"><%=b.getBoardContent()%> . . . <a href="<%=request.getContextPath()%>//board/boardOne.jsp?boardNo=<%=b.getBoardNo()%>" style="text-decoration: none">더보기</a></p>
+								<p class="card-text pfont"><%=b.getBoardContent()%> . . . <a href="<%=request.getContextPath()%>//board/boardOne.jsp?boardNo=<%=b.getBoardNo()%>" class="aa">더보기</a></p>
 						    </div>
 						</div>
 					<%		

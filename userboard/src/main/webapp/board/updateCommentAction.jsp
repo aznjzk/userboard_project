@@ -35,15 +35,19 @@
 	/* 요청값 유효성 검사 */
 	// 요청값이 null이거나 공백이면 → 댓글 페이지 재요청 및 오류메세지 출력
 	if (request.getParameter("updateCommentContent") == null
-		|| request.getParameter("updateCommentContent").equals("")){
+		|| request.getParameter("updateCommentContent").equals("")
+		|| request.getParameter("commentNo")== null
+		|| request.getParameter("commentNo").equals("")){
 		msg = URLEncoder.encode("댓글을 입력해주세요", "utf-8");
-		response.sendRedirect(request.getContextPath() + "/board/boardOne.jsp?boardNo="+request.getParameter("boardNo")+"&msg=" + msg);
+		response.sendRedirect(request.getContextPath() + "/board/updateCommentForm.jsp?boardNo="+request.getParameter("boardNo")+"&commentNo="+request.getParameter("commentNo")+"&msg=" + msg);
 		return;
 	}
 	// 유효성 검사 통과하면 변수에 저장
 	String updateCommentContent = request.getParameter("updateCommentContent");
+	String commentNo = request.getParameter("commentNo");
 	// 디버깅
 	System.out.println(updateCommentContent + " <-- updateCommentAction 변수 updateCommentContent");
+	System.out.println(commentNo + " <-- updateCommentAction 변수 commentNo");
 	
 	/*------------------------------ 2. 모델 계층 -----------------------------*/
 
@@ -64,31 +68,32 @@
 	/*
 		UPDATE comment
 		SET comment_content = ?
-		WHERE member_id = ? 
+		WHERE member_id = ? AND comment_no = ?
 	*/
 	
-	updateCommentSql = "UPDATE comment SET comment_content = ? , updatedate=now() WHERE member_id = ? ";
+	updateCommentSql = "UPDATE comment SET comment_content = ? , updatedate=now() WHERE member_id = ? AND comment_no = ?";
 	updateCommentStmt = conn.prepareStatement(updateCommentSql);
-	// ? 2개
+	// ? 3개
 	updateCommentStmt.setString(1, updateCommentContent);
 	updateCommentStmt.setString(2, loginMemberId);
+	updateCommentStmt.setString(3, commentNo);
 	// 디버깅
 	System.out.println(updateCommentStmt + " <-- updateComment updateCommentStmt"); 
 	
 	// 영향받은 행의 개수
-	int updateCommentRow = 0;
-	updateCommentRow = updateCommentStmt.executeUpdate();
+	int updateCommentRow = updateCommentStmt.executeUpdate();
 	
 	// 댓글 수정 성공 시 
 	if(updateCommentRow == 1){
 		System.out.println(updateCommentRow + " <-- updateCommentAction updateCommentRow : 댓글수정성공");
-		msg = URLEncoder.encode("댓글 수정이 완료되었습니다", "utf-8");
+		msg = URLEncoder.encode("댓글 수정에 성공하였습니다", "utf-8");
 		response.sendRedirect(request.getContextPath() + "/board/boardOne.jsp?boardNo="+request.getParameter("boardNo")+"&msg=" + msg);
 		return;
 	
 	// 댓글 수정 실패 시 
 	} else { 
 		System.out.println(updateCommentRow + " <-- updateAction updatePwRow : 댓글수정실패");
+		msg = URLEncoder.encode("댓글 수정에 실패하였습니다", "utf-8");
 		response.sendRedirect(request.getContextPath() + "/home.jsp?msg=" + msg);
 		return;
 	}

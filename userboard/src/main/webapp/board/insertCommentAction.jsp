@@ -3,7 +3,7 @@
 <%@ page import = "java.net.*"%>
 <%
 	// 인코딩 처리
-	response.setCharacterEncoding("UTF-8");
+	request.setCharacterEncoding("UTF-8");
 
 	// ANSI CODE	
 	final String RESET = "\u001B[0m"; 
@@ -23,9 +23,9 @@
 	}
 	
 	/* 현재 파라미터값 디버깅 */
-	System.out.println(CYAN + request.getParameter("boardNo") + " <- insertCommentAction param boardNo" + RESET);
-	System.out.println(CYAN + request.getParameter("memberId") + " <- insertCommentAction param memberId" + RESET);
-	System.out.println(CYAN + request.getParameter("commentContent") + " <- insertCommentAction param commentContent" + RESET);
+	System.out.println(CYAN + request.getParameter("boardNo") + " <-- insertCommentAction param boardNo" + RESET);
+	System.out.println(CYAN + request.getParameter("memberId") + " <-- insertCommentAction param memberId" + RESET);
+	System.out.println(CYAN + request.getParameter("commentContent") + " <-- insertCommentAction param commentContent" + RESET);
 	
 	/* 요청값 유효성 검사 */
 	// boardNo, memberId
@@ -43,7 +43,7 @@
 	// commentContent
 	if(request.getParameter("commentContent") == null
 			|| request.getParameter("commentContent").equals("")) {
-		String msg = URLEncoder.encode("댓글 내용을 입력해주세요!", "utf-8");
+		String msg = URLEncoder.encode("댓글 내용을 입력해주세요", "utf-8");
 		response.sendRedirect(request.getContextPath() + "/board/boardOne.jsp?boardNo=" + boardNo + "&msg=" + msg);
 		return;
 	}
