@@ -74,10 +74,26 @@
 	<!-- 부트스트랩5 사용 -->
 	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+	<!-- 구글 폰트 적용 -->
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Cute+Font&family=Do+Hyeon&display=swap" rel="stylesheet">
+	<style>
+		.hfont{
+			font-family: 'Black Han Sans', sans-serif;
+		}
+		.pfont{
+			font-family: 'Do Hyeon', sans-serif;
+		}
+		.aa{
+			color: #6C757D;
+			text-decoration: none;
+			}
+	</style>
 </head>
 <body>
 	<!-- 메인메뉴(가로) -->
-	<div>
+	<div class="pfont">
 		<jsp:include page="/inc/mainmenu.jsp"></jsp:include>
 	</div>
 	
@@ -85,24 +101,35 @@
 
 <!--- [시작] 회원정보 ------------------------------------------------------------->
 
-	<div>
-	<h1>회원정보</h1>
-		<table class="table table-bordered">
+	<div class="container">
+	<h1 class="hfont">회원정보</h1>
+		<table class="table pfont">
 			<tr>
-				<th class="table-primary">ID</th>
+				<th class="table-secondary">ID</th>
 				<td><%=user.getMemberId()%></td>
 			</tr>
 			<tr>
-				<th class="table-primary">가입일</th>
+				<th class="table-secondary">가입일</th>
 				<td><%=user.getCreatedate()%></td>
 			</tr>
 		</table>
 		
-		<a href="<%=request.getContextPath()%>/member/updatePwForm.jsp" class="btn btn-light">비밀번호변경</a>
-		<a href="<%=request.getContextPath()%>/member/deleteMemberForm.jsp" class="btn btn-outline-danger">회원탈퇴</a>
+		<div class="pfont">
+			<a href="<%=request.getContextPath()%>/member/updatePwForm.jsp" class="btn btn-outline-secondary">비밀번호변경</a>
+			<a href="<%=request.getContextPath()%>/member/deleteMemberForm.jsp" class="btn btn-outline-danger">회원탈퇴</a>
+		</div>
 	</div>
 			
 <!------------------------------------------------------------- [끝] 회원정보 --->
+	<!-- include 페이지 : Copyright &copy; 구디아카데미 -->
+	<div class="pfont">
+		<jsp:include page="/inc/copyright.jsp"></jsp:include>
+	</div>
+	
+	<!-- Bootstrap core JS-->
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+	<!-- Core theme JS-->
+	<script src="js/scripts.js"></script>
 </body>
 </html>
 
