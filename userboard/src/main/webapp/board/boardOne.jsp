@@ -176,7 +176,7 @@
 		<!-- 3-1) board one 결과셋 -->
 		<div>
 			<h1 class="hfont">게시글 상세내용</h1>
-			<table class="table table-bordered pfont">
+			<table class="table border pfont">
 				<tr>
 					<th class="table-secondary">번호</th>
 					<td><%=board.getBoardNo()%></td>

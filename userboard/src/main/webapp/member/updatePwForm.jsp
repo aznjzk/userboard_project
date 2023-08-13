@@ -35,10 +35,11 @@
 		.pfont{
 			font-family: 'Do Hyeon', sans-serif;
 		}
-		.aa{
-			color: #6C757D;
-			text-decoration: none;
-			}
+		footer{
+			position: absolute;  
+		    bottom: 0;
+		    width: 100%;
+		}
 	</style>
 </head>
 <body>
@@ -51,46 +52,43 @@
 	
 	<!-- 비밀번호 변경 : 현재 비밀번호가 맞을 때만 변경 가능 -->
 	<div class="container">
-	<h2 class="hfont">비밀번호 변경</h2>
-	
-	<!-- 오류 메시지 -->
-	<div class="text-danger pfont">
-		<%
-			if(request.getParameter("msg") != null){
-		%>
-			<%=request.getParameter("msg")%>
-		<%
-			}
-		%>
-	</div>
-	
-	<div>
-	<form action="<%=request.getContextPath()%>/member/updatePwAction.jsp" method="post">
-		<table class="table pfont">
-			<tr>
-				<th class="table-secondary">현재 비밀번호</th>
-				<td><input type="password" name="currentPw"></td>
-			</tr>
-			<tr>
-				<th class="table-secondary">새 비밀번호</th>
-				<td><input type="password" name="newPw"></td>
-			</tr>
-			<tr>
-				<th class="table-secondary">새 비밀번호 확인</th>
-				<td><input type="password" name="newPwCheck"></td>
-			</tr>
-		</table>
+		<h2 class="hfont">비밀번호 변경</h2>
 		
-		<div class="pfont">
-			<button class="btn btn-secondary" type="submit">변경</button>
+		<!-- 오류 메시지 -->
+		<div class="text-danger pfont">
+			<%
+				if(request.getParameter("msg") != null){
+			%>
+				<%=request.getParameter("msg")%>
+			<%
+				}
+			%>
 		</div>
-	</form>
-	</div>
-	
-	<!-- 비밀번호 변경을 취소하고 싶으면 회원정보 화면으로 돌아갈 수 있도록 -->
-	<div class="pfont">
-		<a href="<%=request.getContextPath()%>/member/userInformation.jsp" class="btn btn-light">취소</a>
-	</div>
+		
+		<div>
+			<form action="<%=request.getContextPath()%>/member/updatePwAction.jsp" method="post">
+				<table class="table border pfont">
+					<tr>
+						<th class="table-secondary">현재 비밀번호</th>
+						<td><input type="password" name="currentPw"></td>
+					</tr>
+					<tr>
+						<th class="table-secondary">새 비밀번호</th>
+						<td><input type="password" name="newPw"></td>
+					</tr>
+					<tr>
+						<th class="table-secondary">새 비밀번호 확인</th>
+						<td><input type="password" name="newPwCheck"></td>
+					</tr>
+				</table>
+				
+				<div class="pfont">
+					<button class="btn btn-secondary" type="submit">변경</button>
+					<!-- 비밀번호 변경을 취소하고 싶으면 회원정보 화면으로 돌아갈 수 있도록 -->
+					<a href="<%=request.getContextPath()%>/member/userInformation.jsp" class="btn btn-light">취소</a>
+				</div>
+			</form>
+		</div>
 	</div>
 	<!-- include 페이지 : Copyright &copy; 구디아카데미 -->
 	<div class="pfont">

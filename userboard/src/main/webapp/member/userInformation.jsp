@@ -85,10 +85,11 @@
 		.pfont{
 			font-family: 'Do Hyeon', sans-serif;
 		}
-		.aa{
-			color: #6C757D;
-			text-decoration: none;
-			}
+		footer{
+			position: absolute;  
+		    bottom: 0;
+		    width: 100%;
+		}
 	</style>
 </head>
 <body>
@@ -121,6 +122,7 @@
 	</div>
 			
 <!------------------------------------------------------------- [끝] 회원정보 --->
+	
 	<!-- include 페이지 : Copyright &copy; 구디아카데미 -->
 	<div class="pfont">
 		<jsp:include page="/inc/copyright.jsp"></jsp:include>
@@ -132,5 +134,3 @@
 	<script src="js/scripts.js"></script>
 </body>
 </html>
-
-	

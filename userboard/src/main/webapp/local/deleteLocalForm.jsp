@@ -62,6 +62,11 @@
 		.pfont{
 			font-family: 'Do Hyeon', sans-serif;
 		}
+		footer{
+			position: absolute;  
+		    bottom: 0;
+		    width: 100%;
+		}		
 	</style>
 </head>
 <body>

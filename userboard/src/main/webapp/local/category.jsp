@@ -64,6 +64,11 @@
 		.pfont{
 			font-family: 'Do Hyeon', sans-serif;
 		}
+		footer{
+			position: absolute;  
+		    bottom: 0;
+		    width: 100%;
+		}		
 	</style>
 </head>
 <body>
@@ -103,7 +108,7 @@
 		<br>
 	
 		<table class="table pfont" style="text-align: center;">
-			<tr>
+			<tr class="table-secondary">
 				<th>지역 이름</th>
 				<th>게시글 수</th>
 				<th>생성일</th>
