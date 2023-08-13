@@ -44,6 +44,11 @@
 		.pfont{
 			font-family: 'Do Hyeon', sans-serif;
 		}
+		footer{
+			position: absolute;  
+		    bottom: 0;
+		    width: 100%;
+		}	
 	</style>
 </head>
 <body>
@@ -56,7 +61,7 @@
 	
 	<!--- [시작] 게시글 insert form ------------------------------------------------------------->
 	<div class="container">
-		<h1 class="hfont">Create Post</h1>
+		<h1 class="hfont">게시글 작성</h1>
 		<!-- 오류 메시지 -->
 		<div class="text-danger pfont">
 			<%
@@ -69,11 +74,11 @@
 		</div>
 		<div>
 			<form action="<%=request.getContextPath()%>/board/insertBoardAction.jsp" method="post">
-				<table class="table table-bordered pfont">
+				<table class="table border pfont">
 					<tr>
 						<th class="table-secondary">카테고리</th>
 						<td>
-							<select name="localName" class="form-select" id="exampleSelect1">
+							<select name="localName" class="form-select">
 								<%
 									// 생성된 카테고리 중 선택
 									while(localRs.next()) {

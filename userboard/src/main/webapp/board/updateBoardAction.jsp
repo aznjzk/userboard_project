@@ -34,7 +34,6 @@
 	// 유효성 검사 통과하면 변수에 저장
 	String sessionId = (String)session.getAttribute("loginMemberId");
 	String memberId = request.getParameter("memberId");
-	int boardNo = Integer.parseInt(request.getParameter("boardNo"));
 	
 	// sessionId와 memberId가 일치하는지 확인
 	if(!sessionId.equals(memberId)) {
@@ -43,10 +42,13 @@
 		return;
 	}
 	
+	// 일치하면 boardNo도 불러오기
+	int boardNo = Integer.parseInt(request.getParameter("boardNo"));
+	
 	// 디버깅
-	System.out.println(sessionId + " <- updateBoardAction sessionId");
-	System.out.println(memberId + " <- updateBoardAction memberId");
-	System.out.println(boardNo + " <- updateBoardAction boardNo");
+	System.out.println(sessionId + " <-- updateBoardAction sessionId");
+	System.out.println(memberId + " <-- updateBoardAction memberId");
+	System.out.println(boardNo + " <-- updateBoardAction boardNo");
 	
 	// 나머지 요청값도 검사
 	// 요청값이 null이거나 공백이면 → 게시글 수정 페이지 재요청 및 오류메세지 출력

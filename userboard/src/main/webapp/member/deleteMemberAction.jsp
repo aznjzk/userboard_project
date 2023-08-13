@@ -24,7 +24,7 @@
 	/* 세션 유효성 검사 */ 
 	if(session.getAttribute("loginMemberId") == null){
 		msg = URLEncoder.encode("로그인 후 이용해 주세요.", "utf-8");
-		response.sendRedirect(request.getContextPath() + "/home.jsp");
+		response.sendRedirect(request.getContextPath() + "/home.jsp?msg=" + msg);
 		return;
 	}
 	// 유효성 검사 통과하면 변수에 저장
