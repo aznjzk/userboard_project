@@ -35,6 +35,17 @@
 		localName = request.getParameter("localName");
 	}
 	
+	/* searchWord의 디폴트 값을 "" 로 설정 */
+	// null로 넘어와도 → 전체 게시글을 출력하고
+	// 공백으로 넘어와도 → 전체 게시글을 출력해야 하기 때문
+	String searchWord = "";
+	
+	// 요청 분석 - 게시글 제목 및 내용 검색
+	// null 또는 공백이 아니면 → 즉 요청값이 있으면 변수에 저장
+	if(request.getParameter("searchWord") != null){
+		searchWord = request.getParameter("searchWord");	
+	}
+	
 	/* 페이징을 위한 변수 설정 */
 	int currentPage = 1;	// 현재 페이지 (디폴트 값 1)
 	int rowPerPage = 5;		// 페이지당 출력할 행의 개수 (디폴트 값 5)
@@ -76,6 +87,7 @@
 			createdate
 		FROM board
 		WHERE local_name = ?
+		AND (board_title LIKE ? OR board_content LIKE ?)
 		ORDER BY createdate DESC
 		LIMIT ?, ?
 	*/
@@ -86,20 +98,25 @@
 		
 	// localName의 요청값에 따른 쿼리문 분기
 	if(localName.equals("전체")) {
-		boardSql = "SELECT board_no boardNo, local_name localName, board_title boardTitle, LEFT(board_content, 30) boardContent, createdate FROM board ORDER BY createdate DESC LIMIT ?, ?";
+		boardSql = "SELECT board_no boardNo, local_name localName, board_title boardTitle, LEFT(board_content, 30) boardContent, createdate FROM board WHERE (board_title LIKE ? OR board_content LIKE ?) ORDER BY createdate DESC LIMIT ?, ?";
+		
 		boardStmt = conn.prepareStatement(boardSql);
-		// ? 2개
-		boardStmt.setInt(1, startRow);
-		boardStmt.setInt(2, rowPerPage);
+		// ? 4개
+		boardStmt.setString(1, "%" + searchWord + "%");
+		boardStmt.setString(2, "%" + searchWord + "%");
+		boardStmt.setInt(3, startRow);
+		boardStmt.setInt(4, rowPerPage);
 		// 쿼리 디버깅
 		System.out.println(BG_BLUE + boardStmt + " <-- home boardStmt" + RESET);
 	} else {
-		boardSql = "SELECT board_no boardNo, local_name localName, board_title boardTitle, LEFT(board_content, 30) boardContent, createdate FROM board WHERE local_name = ? ORDER BY createdate DESC LIMIT ?, ?";
+		boardSql = "SELECT board_no boardNo, local_name localName, board_title boardTitle, LEFT(board_content, 30) boardContent, createdate FROM board WHERE local_name = ? AND (board_title LIKE ? OR board_content LIKE ?) ORDER BY createdate DESC LIMIT ?, ?";
 		boardStmt = conn.prepareStatement(boardSql);
-		// ? 3개
+		// ? 5개
 		boardStmt.setString(1, localName);
-		boardStmt.setInt(2, startRow);
-		boardStmt.setInt(3, rowPerPage);
+		boardStmt.setString(2, "%" + searchWord + "%");
+		boardStmt.setString(3, "%" + searchWord + "%");
+		boardStmt.setInt(4, startRow);
+		boardStmt.setInt(5, rowPerPage);
 		// 쿼리 디버깅
 		System.out.println(BG_BLUE + boardStmt + " <-- home boardStmt" + RESET);
 	}
@@ -157,15 +174,20 @@
 	*/
 	// localName에 따라 분기 where절 추가 
 	if(localName.equals("전체")) { 	
-		pageSql = "SELECT COUNT(*) FROM board";
+		pageSql = "SELECT COUNT(*) FROM board WHERE (board_title LIKE ? OR board_content LIKE ?)";
 		pageStmt = conn.prepareStatement(pageSql);
+		// ? 2개
+		pageStmt.setString(1, "%" + searchWord + "%");
+		pageStmt.setString(2, "%" + searchWord + "%");
 		// 쿼리 디버깅
 		System.out.println(BG_BLUE + pageStmt + " <-- home pageStmt" + RESET);
 	} else { 	
-		pageSql = "SELECT COUNT(*) FROM board WHERE local_name = ?";
+		pageSql = "SELECT COUNT(*) FROM board WHERE local_name = ? AND (board_title LIKE ? OR board_content LIKE ?)";
 		pageStmt = conn.prepareStatement(pageSql);
-		// ? 1개
+		// ? 3개
 		pageStmt.setString(1, localName);
+		pageStmt.setString(2, "%" + searchWord + "%");
+		pageStmt.setString(3, "%" + searchWord + "%");
 		// 쿼리 디버깅
 		System.out.println(BG_BLUE + pageStmt + " <-- home pageStmt" + RESET);
 	}
@@ -239,15 +261,9 @@
 	<header class="py-5 bg-image border-bottom mb-4">
 	   	<div class="container">
 	       	<div class="text-center my-5">
-	            <h1 class="fw-bolder hfont">Welcome to Blog Home!</h1>
-	            <p class="lead mb-0 pfont">프로젝트 개요 : 여행 게시판 블로그형식으로 어쩌구 저쩌구 </p>
-	            <p class="lead mb-0 pfont">담당 기능 : 페이징, 게시판출력, 카테고리별 조회, 검색 기능</p>
-	            <p class="lead mb-0 pfont">개발 내용 : 모델1 방식을 사용하여 여행블로그 구현</p>
-	            <p class="lead mb-0 pfont">쇼핑몰 내에서 관리자, 회원, 비회원의 기능별 차등 부여</p>
-	            <p class="lead mb-0 pfont">관리자는 상품, 주문상태, 문의, 리뷰관리, 고객리스트조회, 직원관리 가능</p>
-	            <p class="lead mb-0 pfont">A Bootstrap 5 starter layout for your next blog homepage</p>
-	            <p class="lead mb-0 pfont">개발 환경 : SQL, JavaScript Library JQuery, BootStrap4 Database MariaDB</p>
-	            <p class="lead mb-0 pfont">A Bootstrap 5 starter layout for your next blog homepage</p>
+	            <h1 class="hfont">&#128681;우리동네 맛집지도&#128681;</h1>
+	            <br>
+	            <h4 class="hfont">지역별 맛집에 대한 정보를 공유하는 공간입니다</h4>
 	        </div>
 	    </div>
 	</header>
@@ -332,7 +348,7 @@
 							for(HashMap<String, Object> m : subMenuList) {
 						%>
 						<li>
-							<a href="<%=request.getContextPath()%>/home.jsp?localName=<%=(String)m.get("localName")%>" class="aa">
+							<a href="<%=request.getContextPath()%>/home.jsp?localName=<%=(String)m.get("localName")%>&searchWord=<%=searchWord%>" class="aa">
 								<%=(String)m.get("localName")%>(<%=(Integer)m.get("cnt")%>)
 							</a>
 						</li>
@@ -347,10 +363,13 @@
 				<div class="card mb-4">
 					<div class="card-header hfont">Search</div>
 					<div class="card-body">
-						<div class="input-group pfont">
-							<input class="form-control" type="text" placeholder="Enter search term..." aria-label="Enter search term..." aria-describedby="button-search" />
-							<button class="btn btn-secondary" id="button-search" type="button">Go!</button>
-						</div>
+						<form action="<%= request.getContextPath()%>/home.jsp?localName=<%=localName%>&searchWord=<%=searchWord%>" method="get">
+							<div class="input-group pfont">
+								<input class="form-control" type="text" name="searchWord" placeholder="Enter search term..." aria-label="Enter search term..." aria-describedby="button-search" />
+								<button class="btn btn-secondary" id="button-search" type="submit">Go!</button>
+							</div>
+							<input type="hidden" name="localName" value="<%=localName%>">
+						</form>
 					</div>
 				</div>
 			</div>
@@ -418,18 +437,18 @@
 				<%
 					if(minPage != 1) {
 				%>
-					<li class="page-item active" aria-current="page"><a class="page-link" href="./home.jsp?localName=<%=localName%>&currentPage=<%=minPage-pagePerPage%>">Newer</a></li>
+					<li class="page-item active" aria-current="page"><a class="page-link" href="./home.jsp?localName=<%=localName%>&searchWord=<%=searchWord%>&currentPage=<%=minPage-pagePerPage%>">Newer</a></li>
 				<%
 					} else { // 1페이지에서는 이전버튼 비활성화
 				%>
-					<li class="page-item disabled"><a class="page-link" href="./home.jsp?localName=<%=localName%>&currentPage=<%=minPage-pagePerPage%>">Newer</a></li>
+					<li class="page-item disabled"><a class="page-link" href="./home.jsp?localName=<%=localName%>&searchWord=<%=searchWord%>&currentPage=<%=minPage-pagePerPage%>">Newer</a></li>
 				<%
 					}
 				
 					for(int i = minPage; i <= maxPage; i++) {
 						if(i != currentPage) {
 				%>    
-					<li class="page-item"><a class="page-link" href="./home.jsp?localName=<%=localName%>&currentPage=<%=i%>"><%=i%></a></li>
+					<li class="page-item"><a class="page-link" href="./home.jsp?localName=<%=localName%>&searchWord=<%=searchWord%>&currentPage=<%=i%>"><%=i%></a></li>
 				<%
 						} else { // 현재페이지에서는 버튼 비활성화
 				%>
@@ -442,11 +461,11 @@
 				
 					if(maxPage != lastPage) {
 				%>
-						<li class="page-item active"><a class="page-link" href="./home.jsp?localName=<%=localName%>&currentPage=<%=maxPage+1%>">Older</a></li>
+						<li class="page-item active"><a class="page-link" href="./home.jsp?localName=<%=localName%>&searchWord=<%=searchWord%>&currentPage=<%=maxPage+1%>">Older</a></li>
 				<%
 					} else { // 마지막 페이지에서는 다음버튼 비활성화
 				%>
-						<li class="page-item disabled" aria-current="page"><a class="page-link" href="./home.jsp?localName=<%=localName%>&currentPage=<%=maxPage+1%>">Older</a></li>
+						<li class="page-item disabled" aria-current="page"><a class="page-link" href="./home.jsp?localName=<%=localName%>&searchWord=<%=searchWord%>&currentPage=<%=maxPage+1%>">Older</a></li>
 				<%
 					}
 				%>
